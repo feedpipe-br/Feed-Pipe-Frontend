@@ -1,5 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin '../hero.ts';
+
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -116,11 +120,5 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-.data-\[loaded\=true\]\:opacity-100 {
-  &[data-loaded="true"] {
-    opacity: 100%;
   }
 }

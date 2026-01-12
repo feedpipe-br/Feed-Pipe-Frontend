@@ -2,19 +2,13 @@
 
 import type React from "react"
 import {useState} from "react"
-import {
-  Button,
-  Checkbox,
-  Divider,
-  Input,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from "@heroui/react";
-import {Eye, EyeOff, Leaf, Lock, Mail, User} from "lucide-react"
+import {Eye, EyeOff, Leaf, Lock, Mail} from "lucide-react"
+import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/modal";
+import {Divider} from "@heroui/divider";
+import {Button} from "@heroui/react";
+import {Input} from "@heroui/input";
+import {Checkbox} from "@heroui/checkbox";
+import Link from "next/link";
 
 interface AuthModalProps {
   isOpen: boolean
@@ -95,22 +89,6 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
             </div>
 
             <div className="space-y-4">
-              {activeTab === "register" && (
-                <Input
-                  label="Nombre completo"
-                  placeholder="Juan Pérez"
-                  startContent={<User className="w-4 h-4 text-muted-foreground" />}
-                  variant="bordered"
-                  radius="lg"
-                  classNames={{
-                    input: "text-card-foreground",
-                    inputWrapper: "border-border",
-                    label: "text-muted-foreground",
-                  }}
-                  isRequired
-                />
-              )}
-
               <Input
                 label="Correo electrónico"
                 placeholder="tu@email.com"
@@ -118,17 +96,11 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                 startContent={<Mail className="w-4 h-4 text-muted-foreground" />}
                 variant="bordered"
                 radius="lg"
-                classNames={{
-                  input: "text-card-foreground",
-                  inputWrapper: "border-border",
-                  label: "text-muted-foreground",
-                }}
                 isRequired
               />
 
               <Input
                 label="Contraseña"
-                placeholder="••••••••"
                 type={isPasswordVisible ? "text" : "password"}
                 startContent={<Lock className="w-4 h-4 text-muted-foreground" />}
                 endContent={
@@ -142,13 +114,27 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                 }
                 variant="bordered"
                 radius="lg"
-                classNames={{
-                  input: "text-card-foreground",
-                  inputWrapper: "border-border",
-                  label: "text-muted-foreground",
-                }}
                 isRequired
               />
+              {activeTab === "register" && (
+                  <Input
+                      label="Confirmar Contraseña"
+                      type={isPasswordVisible ? "text" : "password"}
+                      startContent={<Lock className="w-4 h-4 text-muted-foreground" />}
+                      endContent={
+                        <button type="button" onClick={togglePasswordVisibility} className="focus:outline-none">
+                          {isPasswordVisible ? (
+                              <EyeOff className="w-4 h-4 text-muted-foreground" />
+                          ) : (
+                              <Eye className="w-4 h-4 text-muted-foreground" />
+                          )}
+                        </button>
+                      }
+                      variant="bordered"
+                      radius="lg"
+                      isRequired
+                  />
+              )}
 
               {activeTab === "login" ? (
                 <div className="flex justify-between items-center">

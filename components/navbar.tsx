@@ -32,7 +32,7 @@ export function Navbar({ onOpenAuth }: NavbarProps) {
     <HeroNavbar
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
-      className="bg-background/80 backdrop-blur-md border-b border-border py-4"
+      className="bg-background/80 backdrop-blur-md border-b border-border"
       maxWidth="xl"
     >
       <NavbarContent>
