@@ -2,12 +2,11 @@
 
 import { Link, Divider } from "@heroui/react"
 import { Leaf } from "lucide-react"
+import settings from "@/settings";
 
 const footerLinks = {
   producto: [
     { label: "Características", href: "#features" },
-    { label: "Precios", href: "#pricing" },
-    { label: "Testimonios", href: "#testimonials" },
     { label: "FAQ", href: "#" },
   ],
   empresa: [
@@ -31,7 +30,7 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Leaf className="w-8 h-8 text-primary" />
-              <span className="font-bold text-xl text-card-foreground">NutriFit</span>
+              <span className="font-bold text-xl text-card-foreground">{settings.projectName}</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Tu compañero inteligente para una alimentación saludable y sostenible.
@@ -90,7 +89,7 @@ export function Footer() {
         <Divider className="bg-border" />
 
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">© 2026 NutriFit. Todos los derechos reservados.</p>
+          <p className="text-sm text-muted-foreground">© 2026 {settings.projectName}. Todos los derechos reservados.</p>
           <div className="flex gap-6">
             <Link href="#" className="text-muted-foreground hover:text-foreground">
               Twitter

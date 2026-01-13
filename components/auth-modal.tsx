@@ -9,6 +9,7 @@ import {Button} from "@heroui/react";
 import {Input} from "@heroui/input";
 import {Checkbox} from "@heroui/checkbox";
 import Link from "next/link";
+import settings from "@/settings";
 
 interface AuthModalProps {
   isOpen: boolean
@@ -50,7 +51,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
           <ModalHeader className="flex flex-col gap-1">
             <div className="flex items-center gap-2 justify-center">
               <Leaf className="w-6 h-6 text-primary" />
-              <span className="font-bold text-xl text-card-foreground">NutriFit</span>
+              <span className="font-bold text-xl text-card-foreground">{settings.projectName}</span>
             </div>
             <p className="text-center text-muted-foreground text-sm font-normal mt-2">
               {activeTab === "login"

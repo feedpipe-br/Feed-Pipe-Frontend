@@ -13,6 +13,7 @@ import {
 } from "@heroui/react"
 import { Leaf, LogOut, Settings, User } from "lucide-react"
 import Link from "next/link"
+import settings from "@/settings";
 
 export function DashboardNavbar() {
   return (
@@ -22,7 +23,7 @@ export function DashboardNavbar() {
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
             <Leaf className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="font-bold text-xl text-foreground">NutriFit</span>
+          <span className="font-bold text-xl text-foreground">{settings.projectName}</span>
         </Link>
       </NavbarBrand>
 

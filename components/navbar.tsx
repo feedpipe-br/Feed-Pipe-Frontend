@@ -13,6 +13,7 @@ import {
 } from "@heroui/react"
 import { useState } from "react"
 import { Leaf } from "lucide-react"
+import settings from "@/settings";
 
 interface NavbarProps {
   onOpenAuth: (tab: "login" | "register") => void
@@ -24,8 +25,6 @@ export function Navbar({ onOpenAuth }: NavbarProps) {
   const menuItems = [
     { label: "Características", href: "#features" },
     { label: "Cómo Funciona", href: "#how-it-works" },
-    { label: "Testimonios", href: "#testimonials" },
-    { label: "Precios", href: "#pricing" },
   ]
 
   return (
@@ -42,7 +41,7 @@ export function Navbar({ onOpenAuth }: NavbarProps) {
         />
         <NavbarBrand className="gap-2">
           <Leaf className="w-8 h-8 text-primary" />
-          <span className="font-bold text-xl text-foreground">NutriFit</span>
+          <span className="font-bold text-xl text-foreground">{settings.projectName}</span>
         </NavbarBrand>
       </NavbarContent>
 

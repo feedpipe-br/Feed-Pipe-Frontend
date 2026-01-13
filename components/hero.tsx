@@ -40,17 +40,9 @@ export function Hero({ onOpenAuth }: HeroProps) {
               >
                 Comenzar Ahora
               </Button>
-              <Button
-                size="lg"
-                variant="bordered"
-                className="border-border text-foreground font-semibold"
-                radius="full"
-              >
-                Ver Demo
-              </Button>
             </div>
 
-            <div className="flex items-center gap-8 pt-4">
+            {/*<div className="flex items-center gap-8 pt-4">
               <div>
                 <p className="text-2xl font-bold text-foreground">50K+</p>
                 <p className="text-sm text-muted-foreground">Usuarios activos</p>
@@ -65,7 +57,7 @@ export function Hero({ onOpenAuth }: HeroProps) {
                 <p className="text-2xl font-bold text-foreground">1M+</p>
                 <p className="text-sm text-muted-foreground">Recetas</p>
               </div>
-            </div>
+            </div>*/}
           </div>
 
           <div className="relative">

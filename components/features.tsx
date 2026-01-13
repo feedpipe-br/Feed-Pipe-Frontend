@@ -11,11 +11,6 @@ const features = [
       "Algoritmos de IA que crean dietas adaptadas a tus objetivos, preferencias y restricciones alimentarias.",
   },
   {
-    icon: Utensils,
-    title: "Recetas Deliciosas",
-    description: "Miles de recetas saludables con instrucciones paso a paso y valores nutricionales detallados.",
-  },
-  {
     icon: LineChart,
     title: "Seguimiento Inteligente",
     description: "Monitorea tu progreso con gráficos detallados de calorías, macros y micronutrientes.",
@@ -23,17 +18,12 @@ const features = [
   {
     icon: Apple,
     title: "Base de Datos Completa",
-    description: "Más de 1 millón de alimentos con información nutricional actualizada y verificada.",
+    description: "Infinidad de alimentos con información nutricional actualizada y verificada. Ademas tambien puedes incluir nuevos alimentos personalizados para ti.",
   },
   {
     icon: Clock,
     title: "Planificación Semanal",
     description: "Organiza tus comidas de la semana con listas de compras automáticas.",
-  },
-  {
-    icon: Users,
-    title: "Comunidad Activa",
-    description: "Conecta con otros usuarios, comparte recetas y obtén motivación diaria.",
   },
 ]
 

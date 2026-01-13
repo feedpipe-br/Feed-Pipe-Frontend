@@ -26,11 +26,7 @@ export default function Home() {
       <Hero onOpenAuth={handleOpenAuth} />
       <Features />
       <HowItWorks />
-      <Testimonials />
-      <Pricing />
-      <Cta onOpenAuth={handleOpenAuth} />
       <Footer />
-
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} defaultTab={authTab} />
     </main>
   )
