@@ -66,7 +66,6 @@ export function Hero({ onOpenAuth }: HeroProps) {
                 src="/healthy-protein-foods-with-grilled-salmon-fish--ch.jpg"
                 alt="Alimentos proteicos saludables: pescado, carne, huevos"
                 className="w-full h-auto object-cover"
-                loading={"lazy"}
               />
             </div>
 
