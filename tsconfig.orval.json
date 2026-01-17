@@ -1,0 +1,7 @@
+// tsconfig.orval.json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2015"
+  }
+}
