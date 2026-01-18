@@ -1,9 +1,9 @@
 "use client"
 
-import { Button } from "@heroui/button"
+import {Button} from "@heroui/button"
 import {Image} from "@heroui/image";
-import { ArrowRight, Sparkles } from "lucide-react"
-import {AuthTabs, IAuthenticationContext} from "@/types/auth";
+import {ArrowRight, Sparkles} from "lucide-react"
+import {IAuthenticationContext} from "@/types/auth";
 import {useContext} from "react";
 import {AuthenticationContext} from "@/contexts/auth";
 

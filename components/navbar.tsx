@@ -1,20 +1,20 @@
 "use client"
 
 import {
+  Button,
+  Link,
   Navbar as HeroNavbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
-  Button,
-  Link,
+  NavbarMenuToggle,
 } from "@heroui/react"
 import {useContext, useState} from "react"
-import { Leaf } from "lucide-react"
+import {Leaf} from "lucide-react"
 import settings from "@/settings";
-import {AuthTabs, IAuthenticationContext} from "@/types/auth";
+import {IAuthenticationContext} from "@/types/auth";
 import {AuthenticationContext} from "@/contexts/auth";
 
 

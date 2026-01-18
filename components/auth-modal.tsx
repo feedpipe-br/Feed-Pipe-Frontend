@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React, {useContext} from "react"
 import {useState} from "react"
 import {Eye, EyeOff, Leaf, Lock, Mail, MailCheck} from "lucide-react"
 import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/modal";
@@ -42,6 +42,7 @@ export function AuthModal({isOpen, onClose, defaultTab = "login"}: AuthModalProp
         mutation: {
             onSuccess: ({data}) => {
                 Cookies.set('auth_token', data.key, {expires: 7});
+                onClose();
                 router.push("/dashboard");
             },
             onError: (error: AxiosError) => {
@@ -63,7 +64,7 @@ export function AuthModal({isOpen, onClose, defaultTab = "login"}: AuthModalProp
     });
     const register = useAuthRegistrationCreate({
         mutation:{
-            onSuccess: ({data}) => {
+            onSuccess: () => {
                 setActiveTab("email-sent")
             },
             onError: (error: AxiosError) => {
