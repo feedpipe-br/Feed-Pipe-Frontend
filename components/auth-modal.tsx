@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useContext} from "react"
+import React from "react"
 import {useState} from "react"
 import {Eye, EyeOff, Leaf, Lock, Mail, MailCheck} from "lucide-react"
 import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/modal";

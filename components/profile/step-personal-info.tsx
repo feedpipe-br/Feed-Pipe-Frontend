@@ -1,97 +1,96 @@
 "use client"
 
-import { Button, Input } from "@heroui/react"
-import type { ProfileData } from "@/app/onboarding/page"
+import {Autocomplete, AutocompleteItem, Button, Input} from "@heroui/react"
+import {ProfileCreateMutationBody} from "@/src/api/endpoints/profile/profile";
+import {CountryEnum, GenderEnum} from "@/src/api/endpoints/feedPipeAPI.schemas";
+import {useMemo} from "react";
+import {countries} from "countries-list";
 
 interface StepPersonalInfoProps {
-  data: ProfileData
-  onUpdate: (data: Partial<ProfileData>) => void
-  onNext: () => void
+    data: ProfileCreateMutationBody
+    onUpdate: (data: Partial<ProfileCreateMutationBody>) => void
+    onNext: () => void
 }
 
-export function StepPersonalInfo({ data, onUpdate, onNext }: StepPersonalInfoProps) {
-  const isValid = data.fullName.trim() !== "" && data.birthDate !== "" && data.gender !== ""
+export function StepPersonalInfo({data, onUpdate, onNext}: StepPersonalInfoProps) {
+    const isValid = data.name.trim() !== "" && data.birth_date !== ""
+    const today = new Date()
+    const maxDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate()).toISOString().split("T")[0]
+    const countryList = useMemo(() => {
+        return Object.entries(countries).map(([code, data]) => ({
+            code: code,
+            name: data.name,
+        }));
+    }, []);
 
-  const today = new Date()
-  const maxDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate()).toISOString().split("T")[0]
+    return (
+        <div className="flex flex-col gap-6">
+            <Input
+                label="Nombre Completo"
+                placeholder="Ingresa tu nombre completo"
+                value={data.name}
+                onValueChange={(value) => onUpdate({name: value})}
+                variant="bordered"
+                isRequired
+            />
 
-  return (
-    <div className="flex flex-col gap-6">
-      <Input
-        label="Nombre Completo"
-        placeholder="Ingresa tu nombre completo"
-        value={data.fullName}
-        onValueChange={(value) => onUpdate({ fullName: value })}
-        variant="bordered"
-        isRequired
-      />
+            <Input
+                label="Fecha de Nacimiento"
+                type="date"
+                value={data.birth_date}
+                max={maxDate}
+                onValueChange={(value) => onUpdate({birth_date: value})}
+                variant="bordered"
+                isRequired
+            />
 
-      <Input
-        label="Fecha de Nacimiento"
-        type="date"
-        value={data.birthDate}
-        max={maxDate}
-        onChange={(e) => onUpdate({ birthDate: e.target.value })}
-        variant="bordered"
-        isRequired
-      />
+            <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground">
+                    Género <span className="text-danger">*</span>
+                </label>
+                <div className="flex gap-3">
+                    {[
+                        {value: "male", label: "Masculino"},
+                        {value: "female", label: "Femenino"},
+                    ].map((option) => (
+                        <Button
+                            key={option.value}
+                            variant={data.gender === option.value ? "solid" : "bordered"}
+                            color={data.gender === option.value ? "success" : "default"}
+                            onPress={() => onUpdate({gender: option.value as GenderEnum})}
+                            className="flex-1"
+                        >
+                            {option.label}
+                        </Button>
+                    ))}
+                </div>
+            </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-foreground">
-          Género <span className="text-danger">*</span>
-        </label>
-        <div className="flex gap-3">
-          {[
-            { value: "male", label: "Masculino" },
-            { value: "female", label: "Femenino" },
-            { value: "other", label: "Otro" },
-          ].map((option) => (
-            <Button
-              key={option.value}
-              variant={data.gender === option.value ? "solid" : "bordered"}
-              color={data.gender === option.value ? "success" : "default"}
-              onPress={() => onUpdate({ gender: option.value })}
-              className="flex-1"
-            >
-              {option.label}
-            </Button>
-          ))}
+            <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground">País (opcional)</label>
+                <div className="flex flex-wrap gap-2">
+                    <Autocomplete
+                        label="Selecciona un país"
+                        placeholder="Escribe para buscar..."
+                        defaultItems={countryList}
+                        selectedKey={data.country}
+                        className="max-w-xs"
+                        onSelectionChange={(value) => onUpdate({country: value as CountryEnum})}
+                    >
+                        {(item) => (
+                            <AutocompleteItem key={item.code}>
+                                {item.name}
+                            </AutocompleteItem>
+                        )}
+                    </Autocomplete>
+                </div>
+            </div>
+
+            <div className="flex justify-end mt-4">
+                <Button color="success" size="lg" onPress={onNext} isDisabled={!isValid} className="font-semibold">
+                    Continuar
+                </Button>
+            </div>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-foreground">País (opcional)</label>
-        <div className="flex flex-wrap gap-2">
-          {[
-            { value: "ES", label: "España" },
-            { value: "MX", label: "México" },
-            { value: "AR", label: "Argentina" },
-            { value: "CO", label: "Colombia" },
-            { value: "CL", label: "Chile" },
-            { value: "PE", label: "Perú" },
-            { value: "VE", label: "Venezuela" },
-            { value: "EC", label: "Ecuador" },
-            { value: "US", label: "EE.UU." },
-            { value: "OTHER", label: "Otro" },
-          ].map((country) => (
-            <Button
-              key={country.value}
-              variant={data.country === country.value ? "solid" : "bordered"}
-              color={data.country === country.value ? "success" : "default"}
-              size="sm"
-              onPress={() => onUpdate({ country: data.country === country.value ? "" : country.value })}
-            >
-              {country.label}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex justify-end mt-4">
-        <Button color="success" size="lg" onPress={onNext} isDisabled={!isValid} className="font-semibold">
-          Continuar
-        </Button>
-      </div>
-    </div>
-  )
+    )
 }

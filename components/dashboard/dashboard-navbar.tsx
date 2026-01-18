@@ -15,36 +15,24 @@ import {
 } from "@heroui/react"
 import {Leaf, LogOut, Settings, UserPlus, Pencil, ChevronDown, Plus} from "lucide-react"
 import Link from "next/link"
-
-export interface Profile {
-    id: string
-    name: string
-    avatar?: string
-    goal: "lose" | "maintain" | "gain"
-}
-
-interface DashboardNavbarProps {
-    profiles?: Profile[]
-    currentProfileId?: string | null
-    onProfileChange?: (profileId: string) => void
-}
+import {useContext, useMemo} from "react";
+import {IProfileContext, ProfileContext} from "@/contexts/profile";
 
 const goalLabels = {
-    lose: "Perder peso",
-    maintain: "Mantener peso",
-    gain: "Ganar peso",
+    weight_loss: "Perder peso",
+    maintenance: "Mantener peso",
+    weight_gain: "Ganar peso",
 }
 
 function getInitial(name: string): string {
     return name.charAt(0).toUpperCase()
 }
 
-export function DashboardNavbar({
-                                    profiles = [],
-                                    currentProfileId = null,
-                                    onProfileChange
-                                }: DashboardNavbarProps) {
-    const currentProfile = profiles.find((p) => p.id === currentProfileId)
+export function DashboardNavbar() {
+    const {currentProfileId, setCurrentProfileId, profiles, isPending} = useContext(ProfileContext) as IProfileContext
+    const currentProfile = useMemo(() => {
+        return currentProfileId && profiles ? profiles.find(p => p.id === currentProfileId) : null
+    }, [currentProfileId, profiles])
 
     return (
         <Navbar maxWidth="xl" className="border-b border-border bg-card">
@@ -57,9 +45,9 @@ export function DashboardNavbar({
                 </Link>
             </NavbarBrand>
 
-            <NavbarContent justify="end" className="gap-2">
+            {!isPending && <NavbarContent justify="end" className="gap-2">
                 {/* Selector de perfiles */}
-                {profiles.length > 0 && (
+                {profiles && profiles.length > 0 && (
                     <NavbarItem>
                         <Dropdown placement="bottom-end">
                             <DropdownTrigger>
@@ -76,7 +64,7 @@ export function DashboardNavbar({
                       {currentProfile?.name || "Sin perfil"}
                     </span>
                                         <span className="text-xs text-muted-foreground leading-tight">
-                      {currentProfile ? goalLabels[currentProfile.goal] : "Selecciona un perfil"}
+                      {currentProfile?.goal ? goalLabels[currentProfile.goal] : "Selecciona un perfil"}
                     </span>
                                     </div>
                                     <ChevronDown className="h-4 w-4 text-muted-foreground"/>
@@ -90,7 +78,7 @@ export function DashboardNavbar({
                                 onSelectionChange={(keys) => {
                                     const selected = Array.from(keys)[0] as string
                                     if (selected && selected !== "new-profile") {
-                                        onProfileChange?.(selected)
+                                        setCurrentProfileId(parseInt(selected))
                                     }
                                 }}
                             >
@@ -108,8 +96,8 @@ export function DashboardNavbar({
                                                 <div className="flex flex-col">
                                                     <span
                                                         className="text-sm font-medium text-foreground">{profile.name}</span>
-                                                    <span
-                                                        className="text-xs text-muted-foreground">{goalLabels[profile.goal]}</span>
+                                                    {profile.goal && <span
+                                                        className="text-xs text-muted-foreground">{goalLabels[profile.goal]}</span>}
                                                 </div>
                                             </div>
                                         </DropdownItem>
@@ -131,7 +119,7 @@ export function DashboardNavbar({
                     </NavbarItem>
                 )}
 
-                {profiles.length === 0 && (
+                {profiles && profiles.length === 0 && (
                     <NavbarItem>
                         <Button
                             as={Link}
@@ -207,7 +195,7 @@ export function DashboardNavbar({
                         </DropdownMenu>
                     </Dropdown>
                 </NavbarItem>
-            </NavbarContent>
+            </NavbarContent>}
         </Navbar>
     )
 }

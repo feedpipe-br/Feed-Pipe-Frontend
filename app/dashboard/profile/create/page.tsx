@@ -6,108 +6,101 @@ import {Progress} from "@heroui/progress";
 import {StepPersonalInfo} from "@/components/profile/step-personal-info"
 import {StepBodyMetrics} from "@/components/profile/step-body-metrics"
 import {StepGoals} from "@/components/profile/step-goals"
-import {StepRecommendations} from "@/components/profile/step-recommendations"
+import {StepDailyPlan} from "@/components/profile/step-daily-plan"
+import {
+    ProfileCreateMutationBody,
+    ProfileUpdateDailyPlanPartialUpdateMutationBody,
+    useProfileCreate,
+    useProfilePartialUpdate,
+    useProfileUpdateDailyPlanPartialUpdate,
+} from "@/src/api/endpoints/profile/profile";
+import {Profile} from "@/src/api/endpoints/feedPipeAPI.schemas";
+import {addToast} from "@heroui/react";
+import {useRouter} from "next/navigation";
 
-export interface ProfileData {
-    // Step 1
-    fullName: string
-    birthDate: string
-    gender: string
-    country: string
-    // Step 2
-    height: number
-    weight: number
-    weightUnit: "kg" | "lb"
-    activityLevel: number
-    // Step 3
-    goal: "maintain" | "lose" | "gain"
-    intensity: "conservative" | "moderate" | "aggressive"
-}
-
-export interface NutritionRecommendations {
-    calories: number
-    protein: number
-    carbs: number
-    fat: number
-}
-
-const initialProfileData: ProfileData = {
-    fullName: "",
-    birthDate: "",
-    gender: "",
+const initialProfileData: ProfileCreateMutationBody = {
+    name: "",
+    birth_date: "",
+    gender: "male",
     country: "",
     height: 170,
-    weight: 70,
-    weightUnit: "kg",
-    activityLevel: 5,
-    goal: "maintain",
-    intensity: "moderate",
+    weight_value: 70,
+    weight_unit: "kg",
+    activity_degree: 5,
+    goal: "maintenance",
+    goal_intensity: "moderate",
 }
 
 const stepTitles = ["Información Personal", "Métricas Corporales", "Objetivos", "Recomendaciones"]
 
 export default function CreateProfilePage() {
     const [currentStep, setCurrentStep] = useState(1)
-    const [profileData, setProfileData] = useState<ProfileData>(initialProfileData)
-    const [recommendations, setRecommendations] = useState<NutritionRecommendations | null>(null)
+    const [profileData, setProfileData] = useState<ProfileCreateMutationBody>(initialProfileData)
+    const [profileComplete, setProfileComplete] = useState<Profile | null>(null)
+    const [initialDailyPlan, setInitialDailyPlan] = useState<ProfileUpdateDailyPlanPartialUpdateMutationBody>({})
+    const router = useRouter();
+    const createProfile = useProfileCreate({
+        mutation: {
+            onSuccess: ({data}) => {
+                setProfileComplete(data);
+            },
+            onError: () => {
+                addToast({
+                    description: "Fallo crear el perfil, verifique que los datos estan correctos.",
+                    color: "danger"
+                })
+            },
+        }
+    })
+    const updateProfilePartial = useProfilePartialUpdate({
+        mutation: {
+            onSuccess: ({data}) => {
+                setProfileComplete(data);
+            },
+            onError: () => {
+                addToast({
+                    description: "Fallo crear el perfil, verifique que los datos estan correctos.",
+                    color: "danger"
+                })
+            },
+        }
+    })
+    const updateDailyPlan = useProfileUpdateDailyPlanPartialUpdate({
+        mutation: {
+            onSuccess: () => {
+                addToast({
+                    description: `Se completo la creacion del perfil ${profileComplete?.name}.`,
+                    color: "success",
+                })
+                router.push("/dashboard")
+            },
+            onError: () => {
+                addToast({
+                    description: "Fallo crear el perfil, verifique que los datos estan correctos.",
+                    color: "danger"
+                })
+            },
+        }
+    })
 
     const totalSteps = 4
     const progress = (currentStep / totalSteps) * 100
 
-    const updateProfileData = (data: Partial<ProfileData>) => {
+    const updateProfileData = (data: Partial<ProfileCreateMutationBody>) => {
         setProfileData((prev) => ({...prev, ...data}))
-    }
-
-    const calculateRecommendations = (): NutritionRecommendations => {
-        // Convert weight to kg if needed
-        const weightKg = profileData.weightUnit === "lb" ? profileData.weight * 0.453592 : profileData.weight
-
-        // Calculate age from birthDate
-        const birthDate = new Date(profileData.birthDate)
-        const today = new Date()
-        let age = today.getFullYear() - birthDate.getFullYear()
-        const monthDiff = today.getMonth() - birthDate.getMonth()
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--
-        }
-
-        // BMR using Mifflin-St Jeor Equation
-        let bmr: number
-        if (profileData.gender === "male") {
-            bmr = 10 * weightKg + 6.25 * profileData.height - 5 * age + 5
-        } else {
-            bmr = 10 * weightKg + 6.25 * profileData.height - 5 * age - 161
-        }
-
-        // Activity multiplier (1-10 scale mapped to 1.2-2.0)
-        const activityMultiplier = 1.2 + (profileData.activityLevel - 1) * 0.089
-
-        // TDEE (Total Daily Energy Expenditure)
-        let tdee = bmr * activityMultiplier
-
-        // Adjust based on goal and intensity
-        if (profileData.goal === "lose") {
-            const deficitMap = {conservative: 0.15, moderate: 0.2, aggressive: 0.25}
-            tdee = tdee * (1 - deficitMap[profileData.intensity])
-        } else if (profileData.goal === "gain") {
-            const surplusMap = {conservative: 0.1, moderate: 0.15, aggressive: 0.2}
-            tdee = tdee * (1 + surplusMap[profileData.intensity])
-        }
-
-        const calories = Math.round(tdee)
-
-        // Macros distribution
-        const protein = Math.round(weightKg * 2) // 2g per kg
-        const fat = Math.round((calories * 0.25) / 9) // 25% of calories
-        const carbs = Math.round((calories - protein * 4 - fat * 9) / 4)
-
-        return {calories, protein, carbs, fat}
     }
 
     const handleNext = () => {
         if (currentStep === 3) {
-            const recs = calculateRecommendations()
-            setRecommendations(recs)
+            const requestData = {
+                ...profileData,
+                activity_degree: (profileData.activity_degree - 1) * 0.7 / 9 + 1.2
+            }
+            if (profileComplete) {
+                updateProfilePartial.mutate({id: profileComplete.id.toString(), data: requestData})
+            } else {
+                createProfile.mutate({data: requestData})
+            }
         }
         setCurrentStep((prev) => Math.min(prev + 1, totalSteps))
     }
@@ -116,12 +109,9 @@ export default function CreateProfilePage() {
         setCurrentStep((prev) => Math.max(prev - 1, 1))
     }
 
-    const handleComplete = (finalRecommendations: NutritionRecommendations) => {
-        // Here you would save the profile and recommendations to your database
-        console.log("Profile completed:", profileData)
-        console.log("Final recommendations:", finalRecommendations)
-        // Redirect to dashboard
-        window.location.href = "/dashboard"
+    const handleCompleteDailyPlan = (dailyPlan: ProfileUpdateDailyPlanPartialUpdateMutationBody) => {
+        if (!profileComplete) return
+        updateDailyPlan.mutate({id: profileComplete.id.toString(), data: dailyPlan})
     }
 
     return (
@@ -155,9 +145,9 @@ export default function CreateProfilePage() {
                         <StepGoals data={profileData} onUpdate={updateProfileData} onNext={handleNext}
                                    onBack={handleBack}/>
                     )}
-                    {currentStep === 4 && recommendations && (
-                        <StepRecommendations recommendations={recommendations} onBack={handleBack}
-                                             onComplete={handleComplete}/>
+                    {currentStep === 4 && initialDailyPlan && (
+                        <StepDailyPlan initialDailyPlan={initialDailyPlan} onBack={handleBack}
+                                       onComplete={handleCompleteDailyPlan}/>
                     )}
                 </CardBody>
             </Card>

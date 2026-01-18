@@ -1,4 +1,28 @@
-import {createContext} from "react";
-import {IAuthenticationContext} from "@/types/auth";
+import React, {createContext, useEffect, useState} from "react";
+import {AuthTabs, IAuthenticationContext} from "@/types/auth";
+import Cookies from "js-cookie";
+import {useAuthUserRetrieve} from "@/src/api/endpoints/auth/auth";
+import {AuthModal} from "@/components/auth-modal";
 
 export const AuthenticationContext = createContext<IAuthenticationContext | null>(null)
+
+export function AuthenticationProvider({children}: { children: React.ReactNode }) {
+    const [isAuthOpen, setIsAuthOpen] = useState(false)
+    const [authTab, setAuthTab] = useState<AuthTabs>("login")
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!Cookies.get("auth_token"))
+    const {isSuccess, isPending} = useAuthUserRetrieve()
+    useEffect(() => {
+        !isPending && setIsAuthenticated(isSuccess)
+    }, [isSuccess])
+
+    const handleOpenAuth = (tab: AuthTabs) => {
+        setAuthTab(tab)
+        setIsAuthOpen(true)
+    }
+    return (
+        <AuthenticationContext.Provider value={{authTab, setAuthTab, handleOpenAuth, isAuthenticated}}>
+            {children}
+            <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} defaultTab={authTab}/>
+        </AuthenticationContext.Provider>
+    )
+}
