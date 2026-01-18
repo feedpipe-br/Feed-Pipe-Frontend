@@ -43,3 +43,4 @@ bun.lockb
 # webstrom
 .idea
 .vscode
+tailwind.config.js

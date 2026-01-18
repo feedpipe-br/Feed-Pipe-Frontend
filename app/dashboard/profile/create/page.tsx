@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Progress } from "@heroui/progress";
-import { StepPersonalInfo } from "@/components/profile/step-personal-info"
-import { StepBodyMetrics } from "@/components/profile/step-body-metrics"
-import { StepGoals } from "@/components/profile/step-goals"
-import { StepRecommendations } from "@/components/profile/step-recommendations"
+import {useState} from "react"
+import {Card, CardBody, CardHeader} from "@heroui/card";
+import {Progress} from "@heroui/progress";
+import {StepPersonalInfo} from "@/components/profile/step-personal-info"
+import {StepBodyMetrics} from "@/components/profile/step-body-metrics"
+import {StepGoals} from "@/components/profile/step-goals"
+import {StepRecommendations} from "@/components/profile/step-recommendations"
 
 export interface ProfileData {
     // Step 1
@@ -55,7 +55,7 @@ export default function CreateProfilePage() {
     const progress = (currentStep / totalSteps) * 100
 
     const updateProfileData = (data: Partial<ProfileData>) => {
-        setProfileData((prev) => ({ ...prev, ...data }))
+        setProfileData((prev) => ({...prev, ...data}))
     }
 
     const calculateRecommendations = (): NutritionRecommendations => {
@@ -87,10 +87,10 @@ export default function CreateProfilePage() {
 
         // Adjust based on goal and intensity
         if (profileData.goal === "lose") {
-            const deficitMap = { conservative: 0.15, moderate: 0.2, aggressive: 0.25 }
+            const deficitMap = {conservative: 0.15, moderate: 0.2, aggressive: 0.25}
             tdee = tdee * (1 - deficitMap[profileData.intensity])
         } else if (profileData.goal === "gain") {
-            const surplusMap = { conservative: 0.1, moderate: 0.15, aggressive: 0.2 }
+            const surplusMap = {conservative: 0.1, moderate: 0.15, aggressive: 0.2}
             tdee = tdee * (1 + surplusMap[profileData.intensity])
         }
 
@@ -101,7 +101,7 @@ export default function CreateProfilePage() {
         const fat = Math.round((calories * 0.25) / 9) // 25% of calories
         const carbs = Math.round((calories - protein * 4 - fat * 9) / 4)
 
-        return { calories, protein, carbs, fat }
+        return {calories, protein, carbs, fat}
     }
 
     const handleNext = () => {
@@ -125,8 +125,8 @@ export default function CreateProfilePage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center p-4">
-            <Card className="w-full max-w-2xl">
+        <main className="flex justify-center items-center lg:pt-[70px] pt-3 px-3 lg:pt-0">
+            <Card className="w-full max-w-2xl py-3 px-3">
                 <CardHeader className="flex flex-col gap-4 pb-0">
                     <div className="flex items-center justify-between w-full">
                         <h1 className="text-2xl font-bold text-emerald-700">Crear tu Perfil</h1>
@@ -145,19 +145,22 @@ export default function CreateProfilePage() {
                 </CardHeader>
                 <CardBody className="pt-6">
                     {currentStep === 1 && (
-                        <StepPersonalInfo data={profileData} onUpdate={updateProfileData} onNext={handleNext} />
+                        <StepPersonalInfo data={profileData} onUpdate={updateProfileData} onNext={handleNext}/>
                     )}
                     {currentStep === 2 && (
-                        <StepBodyMetrics data={profileData} onUpdate={updateProfileData} onNext={handleNext} onBack={handleBack} />
+                        <StepBodyMetrics data={profileData} onUpdate={updateProfileData} onNext={handleNext}
+                                         onBack={handleBack}/>
                     )}
                     {currentStep === 3 && (
-                        <StepGoals data={profileData} onUpdate={updateProfileData} onNext={handleNext} onBack={handleBack} />
+                        <StepGoals data={profileData} onUpdate={updateProfileData} onNext={handleNext}
+                                   onBack={handleBack}/>
                     )}
                     {currentStep === 4 && recommendations && (
-                        <StepRecommendations recommendations={recommendations} onBack={handleBack} onComplete={handleComplete} />
+                        <StepRecommendations recommendations={recommendations} onBack={handleBack}
+                                             onComplete={handleComplete}/>
                     )}
                 </CardBody>
             </Card>
-        </div>
+        </main>
     )
 }
