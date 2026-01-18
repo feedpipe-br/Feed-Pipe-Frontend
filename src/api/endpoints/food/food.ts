@@ -53,8 +53,6 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
     }
   : DistributeReadOnlyOverUnions<T>;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
 export type foodListResponse200 = {
   data: Food[];
   status: 200;
@@ -89,15 +87,14 @@ export const getFoodListQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const { query: queryOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getFoodListQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof foodList>>> = ({
     signal,
-  }) => foodList({ signal, ...requestOptions });
+  }) => foodList({ signal });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof foodList>>,
@@ -127,7 +124,6 @@ export function useFoodList<
         >,
         "initialData"
       >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
@@ -149,7 +145,6 @@ export function useFoodList<
         >,
         "initialData"
       >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -163,7 +158,6 @@ export function useFoodList<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -178,7 +172,6 @@ export function useFoodList<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -230,7 +223,6 @@ export const getFoodCreateMutationOptions = <
     { data: NonReadonly<Food> },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof foodCreate>>,
   TError,
@@ -238,13 +230,13 @@ export const getFoodCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["foodCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof foodCreate>>,
@@ -252,7 +244,7 @@ export const getFoodCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return foodCreate(data, requestOptions);
+    return foodCreate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -272,7 +264,6 @@ export const useFoodCreate = <TError = unknown, TContext = unknown>(
       { data: NonReadonly<Food> },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -320,16 +311,15 @@ export const getFoodRetrieveQueryOptions = <
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodRetrieve>>, TError, TData>
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const { query: queryOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getFoodRetrieveQueryKey(id);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof foodRetrieve>>> = ({
     signal,
-  }) => foodRetrieve(id, { signal, ...requestOptions });
+  }) => foodRetrieve(id, { signal });
 
   return {
     queryKey,
@@ -365,7 +355,6 @@ export function useFoodRetrieve<
         >,
         "initialData"
       >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
@@ -388,7 +377,6 @@ export function useFoodRetrieve<
         >,
         "initialData"
       >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -403,7 +391,6 @@ export function useFoodRetrieve<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodRetrieve>>, TError, TData>
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -419,7 +406,6 @@ export function useFoodRetrieve<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodRetrieve>>, TError, TData>
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -472,7 +458,6 @@ export const getFoodUpdateMutationOptions = <
     { id: number; data: NonReadonly<Food> },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof foodUpdate>>,
   TError,
@@ -480,13 +465,13 @@ export const getFoodUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["foodUpdate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof foodUpdate>>,
@@ -494,7 +479,7 @@ export const getFoodUpdateMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return foodUpdate(id, data, requestOptions);
+    return foodUpdate(id, data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -514,7 +499,6 @@ export const useFoodUpdate = <TError = unknown, TContext = unknown>(
       { id: number; data: NonReadonly<Food> },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -562,7 +546,6 @@ export const getFoodPartialUpdateMutationOptions = <
     { id: number; data: NonReadonly<PatchedFood> },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof foodPartialUpdate>>,
   TError,
@@ -570,13 +553,13 @@ export const getFoodPartialUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["foodPartialUpdate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof foodPartialUpdate>>,
@@ -584,7 +567,7 @@ export const getFoodPartialUpdateMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return foodPartialUpdate(id, data, requestOptions);
+    return foodPartialUpdate(id, data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -604,7 +587,6 @@ export const useFoodPartialUpdate = <TError = unknown, TContext = unknown>(
       { id: number; data: NonReadonly<PatchedFood> },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -649,7 +631,6 @@ export const getFoodDestroyMutationOptions = <
     { id: number },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof foodDestroy>>,
   TError,
@@ -657,13 +638,13 @@ export const getFoodDestroyMutationOptions = <
   TContext
 > => {
   const mutationKey = ["foodDestroy"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof foodDestroy>>,
@@ -671,7 +652,7 @@ export const getFoodDestroyMutationOptions = <
   > = (props) => {
     const { id } = props ?? {};
 
-    return foodDestroy(id, requestOptions);
+    return foodDestroy(id);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -691,7 +672,6 @@ export const useFoodDestroy = <TError = unknown, TContext = unknown>(
       { id: number },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<

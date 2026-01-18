@@ -65,8 +65,6 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
     }
   : DistributeReadOnlyOverUnions<T>;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
 /**
  * Check the credentials and return the REST Token
 if the credentials are valid and authenticated.
@@ -112,7 +110,6 @@ export const getAuthLoginCreateMutationOptions = <
     { data: Login },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authLoginCreate>>,
   TError,
@@ -120,13 +117,13 @@ export const getAuthLoginCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authLoginCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authLoginCreate>>,
@@ -134,7 +131,7 @@ export const getAuthLoginCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authLoginCreate(data, requestOptions);
+    return authLoginCreate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -154,7 +151,6 @@ export const useAuthLoginCreate = <TError = unknown, TContext = unknown>(
       { data: Login },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -204,7 +200,6 @@ export const getAuthLogoutCreateMutationOptions = <
     void,
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authLogoutCreate>>,
   TError,
@@ -212,19 +207,19 @@ export const getAuthLogoutCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authLogoutCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authLogoutCreate>>,
     void
   > = () => {
-    return authLogoutCreate(requestOptions);
+    return authLogoutCreate();
   };
 
   return { mutationFn, ...mutationOptions };
@@ -244,7 +239,6 @@ export const useAuthLogoutCreate = <TError = unknown, TContext = unknown>(
       void,
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -302,7 +296,6 @@ export const getAuthPasswordChangeCreateMutationOptions = <
     { data: PasswordChange },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authPasswordChangeCreate>>,
   TError,
@@ -310,13 +303,13 @@ export const getAuthPasswordChangeCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authPasswordChangeCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authPasswordChangeCreate>>,
@@ -324,7 +317,7 @@ export const getAuthPasswordChangeCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authPasswordChangeCreate(data, requestOptions);
+    return authPasswordChangeCreate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -347,7 +340,6 @@ export const useAuthPasswordChangeCreate = <
       { data: PasswordChange },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -408,7 +400,6 @@ export const getAuthPasswordResetCreateMutationOptions = <
     { data: PasswordReset },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authPasswordResetCreate>>,
   TError,
@@ -416,13 +407,13 @@ export const getAuthPasswordResetCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authPasswordResetCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authPasswordResetCreate>>,
@@ -430,7 +421,7 @@ export const getAuthPasswordResetCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authPasswordResetCreate(data, requestOptions);
+    return authPasswordResetCreate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -453,7 +444,6 @@ export const useAuthPasswordResetCreate = <
       { data: PasswordReset },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -516,7 +506,6 @@ export const getAuthPasswordResetConfirmCreateMutationOptions = <
     { data: PasswordResetConfirm },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authPasswordResetConfirmCreate>>,
   TError,
@@ -524,13 +513,13 @@ export const getAuthPasswordResetConfirmCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authPasswordResetConfirmCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authPasswordResetConfirmCreate>>,
@@ -538,7 +527,7 @@ export const getAuthPasswordResetConfirmCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authPasswordResetConfirmCreate(data, requestOptions);
+    return authPasswordResetConfirmCreate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -561,7 +550,6 @@ export const useAuthPasswordResetConfirmCreate = <
       { data: PasswordResetConfirm },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -621,7 +609,6 @@ export const getAuthRegistrationCreateMutationOptions = <
     { data: Register },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authRegistrationCreate>>,
   TError,
@@ -629,13 +616,13 @@ export const getAuthRegistrationCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authRegistrationCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authRegistrationCreate>>,
@@ -643,7 +630,7 @@ export const getAuthRegistrationCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authRegistrationCreate(data, requestOptions);
+    return authRegistrationCreate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -663,7 +650,6 @@ export const useAuthRegistrationCreate = <TError = unknown, TContext = unknown>(
       { data: Register },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -723,7 +709,6 @@ export const getAuthRegistrationResendEmailCreateMutationOptions = <
     { data: ResendEmailVerification },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authRegistrationResendEmailCreate>>,
   TError,
@@ -731,13 +716,13 @@ export const getAuthRegistrationResendEmailCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authRegistrationResendEmailCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authRegistrationResendEmailCreate>>,
@@ -745,7 +730,7 @@ export const getAuthRegistrationResendEmailCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authRegistrationResendEmailCreate(data, requestOptions);
+    return authRegistrationResendEmailCreate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -769,7 +754,6 @@ export const useAuthRegistrationResendEmailCreate = <
       { data: ResendEmailVerification },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -829,7 +813,6 @@ export const getAuthRegistrationVerifyEmailCreateMutationOptions = <
     { data: VerifyEmail },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authRegistrationVerifyEmailCreate>>,
   TError,
@@ -837,13 +820,13 @@ export const getAuthRegistrationVerifyEmailCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authRegistrationVerifyEmailCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authRegistrationVerifyEmailCreate>>,
@@ -851,7 +834,7 @@ export const getAuthRegistrationVerifyEmailCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authRegistrationVerifyEmailCreate(data, requestOptions);
+    return authRegistrationVerifyEmailCreate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -874,7 +857,6 @@ export const useAuthRegistrationVerifyEmailCreate = <
       { data: VerifyEmail },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -932,15 +914,14 @@ export const getAuthUserRetrieveQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof authUserRetrieve>>, TError, TData>
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const { query: queryOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getAuthUserRetrieveQueryKey();
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof authUserRetrieve>>
-  > = ({ signal }) => authUserRetrieve({ signal, ...requestOptions });
+  > = ({ signal }) => authUserRetrieve({ signal });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof authUserRetrieve>>,
@@ -974,7 +955,6 @@ export function useAuthUserRetrieve<
         >,
         "initialData"
       >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
@@ -1000,7 +980,6 @@ export function useAuthUserRetrieve<
         >,
         "initialData"
       >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -1018,7 +997,6 @@ export function useAuthUserRetrieve<
         TData
       >
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -1037,7 +1015,6 @@ export function useAuthUserRetrieve<
         TData
       >
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -1099,7 +1076,6 @@ export const getAuthUserUpdateMutationOptions = <
     { data: NonReadonly<UserDetails> },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authUserUpdate>>,
   TError,
@@ -1107,13 +1083,13 @@ export const getAuthUserUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authUserUpdate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authUserUpdate>>,
@@ -1121,7 +1097,7 @@ export const getAuthUserUpdateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authUserUpdate(data, requestOptions);
+    return authUserUpdate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -1141,7 +1117,6 @@ export const useAuthUserUpdate = <TError = unknown, TContext = unknown>(
       { data: NonReadonly<UserDetails> },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -1203,7 +1178,6 @@ export const getAuthUserPartialUpdateMutationOptions = <
     { data: NonReadonly<PatchedUserDetails> },
     TContext
   >;
-  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authUserPartialUpdate>>,
   TError,
@@ -1211,13 +1185,13 @@ export const getAuthUserPartialUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["authUserPartialUpdate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
+  const { mutation: mutationOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+    : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authUserPartialUpdate>>,
@@ -1225,7 +1199,7 @@ export const getAuthUserPartialUpdateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authUserPartialUpdate(data, requestOptions);
+    return authUserPartialUpdate(data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -1245,7 +1219,6 @@ export const useAuthUserPartialUpdate = <TError = unknown, TContext = unknown>(
       { data: NonReadonly<PatchedUserDetails> },
       TContext
     >;
-    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
