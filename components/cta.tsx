@@ -2,9 +2,10 @@
 
 import { Button } from "@heroui/react"
 import { ArrowRight } from "lucide-react"
+import {AuthTabs} from "@/types/auth";
 
 interface CtaProps {
-  onOpenAuth: (tab: "login" | "register") => void
+  onOpenAuth: (tab: AuthTabs) => void
 }
 
 export function Cta({ onOpenAuth }: CtaProps) {

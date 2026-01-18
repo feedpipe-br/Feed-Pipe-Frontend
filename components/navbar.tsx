@@ -11,16 +11,16 @@ import {
   Button,
   Link,
 } from "@heroui/react"
-import { useState } from "react"
+import {useContext, useState} from "react"
 import { Leaf } from "lucide-react"
 import settings from "@/settings";
+import {AuthTabs, IAuthenticationContext} from "@/types/auth";
+import {AuthenticationContext} from "@/contexts/auth";
 
-interface NavbarProps {
-  onOpenAuth: (tab: "login" | "register") => void
-}
 
-export function Navbar({ onOpenAuth }: NavbarProps) {
+export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { handleOpenAuth } = useContext(AuthenticationContext) as IAuthenticationContext
 
   const menuItems = [
     { label: "Características", href: "#features" },
@@ -60,7 +60,7 @@ export function Navbar({ onOpenAuth }: NavbarProps) {
           <Button
             variant="light"
             className="text-muted-foreground hover:text-foreground"
-            onPress={() => onOpenAuth("login")}
+            onPress={() => handleOpenAuth("login")}
           >
             Iniciar Sesión
           </Button>
@@ -69,7 +69,7 @@ export function Navbar({ onOpenAuth }: NavbarProps) {
           <Button
             className="bg-primary text-primary-foreground font-semibold"
             radius="full"
-            onPress={() => onOpenAuth("register")}
+            onPress={() => handleOpenAuth("register")}
           >
             Empezar Gratis
           </Button>
@@ -90,7 +90,7 @@ export function Navbar({ onOpenAuth }: NavbarProps) {
             className="w-full justify-start text-muted-foreground text-lg py-2"
             onPress={() => {
               setIsMenuOpen(false)
-              onOpenAuth("login")
+              handleOpenAuth("login")
             }}
           >
             Iniciar Sesión

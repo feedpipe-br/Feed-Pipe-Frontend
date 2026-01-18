@@ -3,12 +3,14 @@
 import { Button } from "@heroui/button"
 import {Image} from "@heroui/image";
 import { ArrowRight, Sparkles } from "lucide-react"
+import {AuthTabs, IAuthenticationContext} from "@/types/auth";
+import {useContext} from "react";
+import {AuthenticationContext} from "@/contexts/auth";
 
-interface HeroProps {
-  onOpenAuth: (tab: "login" | "register") => void
-}
 
-export function Hero({ onOpenAuth }: HeroProps) {
+export function Hero() {
+  const { handleOpenAuth } = useContext(AuthenticationContext) as IAuthenticationContext
+
   return (
     <section className="relative overflow-hidden py-20 lg:py-32">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-secondary via-background to-background" />
@@ -36,7 +38,7 @@ export function Hero({ onOpenAuth }: HeroProps) {
                 className="bg-primary text-primary-foreground font-semibold"
                 radius="full"
                 endContent={<ArrowRight className="w-5 h-5" />}
-                onPress={() => onOpenAuth("register")}
+                onPress={() => handleOpenAuth("register")}
               >
                 Comenzar Ahora
               </Button>
