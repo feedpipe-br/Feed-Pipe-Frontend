@@ -1,5 +1,5 @@
 import {Profile} from "@/src/api/endpoints/feedPipeAPI.schemas";
-import React, {useContext, useEffect, useMemo} from "react";
+import React, {useContext, useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {AuthenticationContext} from "@/contexts/auth";
 import {IAuthenticationContext} from "@/types/auth";

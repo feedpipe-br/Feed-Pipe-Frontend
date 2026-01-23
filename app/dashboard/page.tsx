@@ -1,19 +1,31 @@
 "use client"
 
-import {useState} from "react"
+import {useContext, useState} from "react"
 import {DailyOverview} from "@/components/dashboard/daily-overview"
 import {MacrosBreakdown} from "@/components/dashboard/macros-breakdown"
 import {HistoricalChart} from "@/components/dashboard/historical-chart"
 import {DateSelector} from "@/components/dashboard/date-selector"
 import {MealsList} from "@/components/dashboard/meals-list"
 import {EmptyProfileState} from "@/components/dashboard/empty-profiles-state";
+import {IProfileContext, ProfileContext} from "@/contexts/profile";
+import {Spinner} from "@heroui/react";
 
 export default function DashboardPage() {
-    const profiles = [{}]
+    const { profiles, isPending } = useContext(ProfileContext) as IProfileContext
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
     const [chartPeriod, setChartPeriod] = useState<7 | 15 | 30>(7)
 
-    if (profiles.length) return (
+    if (isPending){
+        return (
+            <main className="mx-auto px-4 py-8 absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="flex justify-center items-center">
+                    <Spinner size={"lg"}/>
+                </div>
+            </main>
+        )
+    }
+
+    if (profiles?.length) return (
         <main className="container mx-auto px-4 py-8">
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
