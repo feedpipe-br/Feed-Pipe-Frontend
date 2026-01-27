@@ -60,6 +60,8 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
     }
   : DistributeReadOnlyOverUnions<T>;
 
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
 export type profileListResponse200 = {
   data: Profile[];
   status: 200;
@@ -94,14 +96,15 @@ export const getProfileListQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof profileList>>, TError, TData>
   >;
+  request?: SecondParameter<typeof axiosInstance>;
 }) => {
-  const { query: queryOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getProfileListQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof profileList>>> = ({
     signal,
-  }) => profileList({ signal });
+  }) => profileList({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof profileList>>,
@@ -131,6 +134,7 @@ export function useProfileList<
         >,
         "initialData"
       >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
@@ -152,6 +156,7 @@ export function useProfileList<
         >,
         "initialData"
       >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -165,6 +170,7 @@ export function useProfileList<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof profileList>>, TError, TData>
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -179,6 +185,7 @@ export function useProfileList<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof profileList>>, TError, TData>
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -230,6 +237,7 @@ export const getProfileCreateMutationOptions = <
     { data: NonReadonly<Profile> },
     TContext
   >;
+  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof profileCreate>>,
   TError,
@@ -237,13 +245,13 @@ export const getProfileCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["profileCreate"];
-  const { mutation: mutationOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof profileCreate>>,
@@ -251,7 +259,7 @@ export const getProfileCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return profileCreate(data);
+    return profileCreate(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -271,6 +279,7 @@ export const useProfileCreate = <TError = unknown, TContext = unknown>(
       { data: NonReadonly<Profile> },
       TContext
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -322,15 +331,16 @@ export const getProfileRetrieveQueryOptions = <
         TData
       >
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
 ) => {
-  const { query: queryOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getProfileRetrieveQueryKey(id);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof profileRetrieve>>> = ({
     signal,
-  }) => profileRetrieve(id, { signal });
+  }) => profileRetrieve(id, { signal, ...requestOptions });
 
   return {
     queryKey,
@@ -370,6 +380,7 @@ export function useProfileRetrieve<
         >,
         "initialData"
       >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
@@ -396,6 +407,7 @@ export function useProfileRetrieve<
         >,
         "initialData"
       >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -414,6 +426,7 @@ export function useProfileRetrieve<
         TData
       >
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -433,6 +446,7 @@ export function useProfileRetrieve<
         TData
       >
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
@@ -485,6 +499,7 @@ export const getProfileUpdateMutationOptions = <
     { id: string; data: NonReadonly<Profile> },
     TContext
   >;
+  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof profileUpdate>>,
   TError,
@@ -492,13 +507,13 @@ export const getProfileUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["profileUpdate"];
-  const { mutation: mutationOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof profileUpdate>>,
@@ -506,7 +521,7 @@ export const getProfileUpdateMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return profileUpdate(id, data);
+    return profileUpdate(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -526,6 +541,7 @@ export const useProfileUpdate = <TError = unknown, TContext = unknown>(
       { id: string; data: NonReadonly<Profile> },
       TContext
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -577,6 +593,7 @@ export const getProfilePartialUpdateMutationOptions = <
     { id: string; data: NonReadonly<PatchedProfile> },
     TContext
   >;
+  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof profilePartialUpdate>>,
   TError,
@@ -584,13 +601,13 @@ export const getProfilePartialUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["profilePartialUpdate"];
-  const { mutation: mutationOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof profilePartialUpdate>>,
@@ -598,7 +615,7 @@ export const getProfilePartialUpdateMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return profilePartialUpdate(id, data);
+    return profilePartialUpdate(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -618,6 +635,7 @@ export const useProfilePartialUpdate = <TError = unknown, TContext = unknown>(
       { id: string; data: NonReadonly<PatchedProfile> },
       TContext
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -665,6 +683,7 @@ export const getProfileDestroyMutationOptions = <
     { id: string },
     TContext
   >;
+  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof profileDestroy>>,
   TError,
@@ -672,13 +691,13 @@ export const getProfileDestroyMutationOptions = <
   TContext
 > => {
   const mutationKey = ["profileDestroy"];
-  const { mutation: mutationOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof profileDestroy>>,
@@ -686,7 +705,7 @@ export const getProfileDestroyMutationOptions = <
   > = (props) => {
     const { id } = props ?? {};
 
-    return profileDestroy(id);
+    return profileDestroy(id, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -706,6 +725,7 @@ export const useProfileDestroy = <TError = unknown, TContext = unknown>(
       { id: string },
       TContext
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -772,6 +792,7 @@ export const getProfileUpdateDailyPlanUpdateMutationOptions = <
     { id: string; data: NonReadonly<DailyPlan> },
     TContext
   >;
+  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof profileUpdateDailyPlanUpdate>>,
   TError,
@@ -779,13 +800,13 @@ export const getProfileUpdateDailyPlanUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["profileUpdateDailyPlanUpdate"];
-  const { mutation: mutationOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof profileUpdateDailyPlanUpdate>>,
@@ -793,7 +814,7 @@ export const getProfileUpdateDailyPlanUpdateMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return profileUpdateDailyPlanUpdate(id, data);
+    return profileUpdateDailyPlanUpdate(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -817,6 +838,7 @@ export const useProfileUpdateDailyPlanUpdate = <
       { id: string; data: NonReadonly<DailyPlan> },
       TContext
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -886,6 +908,7 @@ export const getProfileUpdateDailyPlanPartialUpdateMutationOptions = <
     { id: string; data: NonReadonly<PatchedDailyPlan> },
     TContext
   >;
+  request?: SecondParameter<typeof axiosInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof profileUpdateDailyPlanPartialUpdate>>,
   TError,
@@ -893,13 +916,13 @@ export const getProfileUpdateDailyPlanPartialUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ["profileUpdateDailyPlanPartialUpdate"];
-  const { mutation: mutationOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof profileUpdateDailyPlanPartialUpdate>>,
@@ -907,7 +930,7 @@ export const getProfileUpdateDailyPlanPartialUpdateMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return profileUpdateDailyPlanPartialUpdate(id, data);
+    return profileUpdateDailyPlanPartialUpdate(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -932,6 +955,7 @@ export const useProfileUpdateDailyPlanPartialUpdate = <
       { id: string; data: NonReadonly<PatchedDailyPlan> },
       TContext
     >;
+    request?: SecondParameter<typeof axiosInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<

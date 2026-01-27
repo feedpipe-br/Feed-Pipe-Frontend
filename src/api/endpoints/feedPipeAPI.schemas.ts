@@ -5,6 +5,26 @@
  * Your project description
  * OpenAPI spec version: 1.0.0
  */
+/**
+ * * `g` - grams
+ * `oz` - ounce
+ * `lb` - pounds
+ * `cup` - cups
+ * `mL` - mL
+ * `L` - liters
+ */
+export type AmountUnitEnum =
+  (typeof AmountUnitEnum)[keyof typeof AmountUnitEnum];
+
+export const AmountUnitEnum = {
+  g: "g",
+  oz: "oz",
+  lb: "lb",
+  cup: "cup",
+  mL: "mL",
+  L: "L",
+} as const;
+
 export type BlankEnum = (typeof BlankEnum)[keyof typeof BlankEnum];
 
 export const BlankEnum = {
@@ -522,12 +542,12 @@ export interface DailyPlan {
    * @minimum 0
    * @maximum 9223372036854776000
    */
-  total_cal: number;
+  calories: number;
   /**
    * @minimum 0
    * @maximum 9223372036854776000
    */
-  proteins: number;
+  protein: number;
   /**
    * @minimum 0
    * @maximum 9223372036854776000
@@ -538,7 +558,16 @@ export interface DailyPlan {
    * @maximum 9223372036854776000
    */
   carbs: number;
+  start_date?: string;
   profile: number;
+}
+
+export interface DaySummary {
+  readonly daily_plan: DailyPlan;
+  calories: number;
+  protein: number;
+  fats: number;
+  carbs: number;
 }
 
 export interface Food {
@@ -586,6 +615,59 @@ export interface Food {
   is_vegan?: boolean;
   is_vegetarian?: boolean;
   is_gluten_free?: boolean;
+}
+
+/**
+ * * `breakfast` - Breakfast
+ * `lunch` - Lunch
+ * `dinner` - Dinner
+ * `snack` - snack
+ * `extra` - extra
+ */
+export type FoodTimeEnum = (typeof FoodTimeEnum)[keyof typeof FoodTimeEnum];
+
+export const FoodTimeEnum = {
+  breakfast: "breakfast",
+  lunch: "lunch",
+  dinner: "dinner",
+  snack: "snack",
+  extra: "extra",
+} as const;
+
+export interface FoodLog {
+  readonly id: number;
+  /** @nullable */
+  food_name?: string | null;
+  /** @pattern ^-?\d{0,8}(?:\.\d{0,2})?$ */
+  amount: string;
+  amount_unit?: AmountUnitEnum;
+  timestamp: string;
+  food_time?: FoodTimeEnum;
+  /**
+   * @nullable
+   * @pattern ^-?\d{0,6}(?:\.\d{0,2})?$
+   */
+  calories?: string | null;
+  /**
+   * @nullable
+   * @pattern ^-?\d{0,6}(?:\.\d{0,2})?$
+   */
+  fats?: string | null;
+  extra_fats_info?: unknown;
+  /**
+   * @nullable
+   * @pattern ^-?\d{0,6}(?:\.\d{0,2})?$
+   */
+  carbs?: string | null;
+  extra_carbs_info?: unknown;
+  /**
+   * @nullable
+   * @pattern ^-?\d{0,6}(?:\.\d{0,2})?$
+   */
+  protein?: string | null;
+  profile: number;
+  /** @nullable */
+  food?: number | null;
 }
 
 /**
@@ -668,12 +750,12 @@ export interface PatchedDailyPlan {
    * @minimum 0
    * @maximum 9223372036854776000
    */
-  total_cal?: number;
+  calories?: number;
   /**
    * @minimum 0
    * @maximum 9223372036854776000
    */
-  proteins?: number;
+  protein?: number;
   /**
    * @minimum 0
    * @maximum 9223372036854776000
@@ -684,6 +766,7 @@ export interface PatchedDailyPlan {
    * @maximum 9223372036854776000
    */
   carbs?: number;
+  start_date?: string;
   profile?: number;
 }
 
@@ -732,6 +815,42 @@ export interface PatchedFood {
   is_vegan?: boolean;
   is_vegetarian?: boolean;
   is_gluten_free?: boolean;
+}
+
+export interface PatchedFoodLog {
+  readonly id?: number;
+  /** @nullable */
+  food_name?: string | null;
+  /** @pattern ^-?\d{0,8}(?:\.\d{0,2})?$ */
+  amount?: string;
+  amount_unit?: AmountUnitEnum;
+  timestamp?: string;
+  food_time?: FoodTimeEnum;
+  /**
+   * @nullable
+   * @pattern ^-?\d{0,6}(?:\.\d{0,2})?$
+   */
+  calories?: string | null;
+  /**
+   * @nullable
+   * @pattern ^-?\d{0,6}(?:\.\d{0,2})?$
+   */
+  fats?: string | null;
+  extra_fats_info?: unknown;
+  /**
+   * @nullable
+   * @pattern ^-?\d{0,6}(?:\.\d{0,2})?$
+   */
+  carbs?: string | null;
+  extra_carbs_info?: unknown;
+  /**
+   * @nullable
+   * @pattern ^-?\d{0,6}(?:\.\d{0,2})?$
+   */
+  protein?: string | null;
+  profile?: number;
+  /** @nullable */
+  food?: number | null;
 }
 
 /**
@@ -868,6 +987,16 @@ export interface UserDetails {
 export interface VerifyEmail {
   key: string;
 }
+
+export type FoodLogListParams = {
+  date?: string;
+  profile?: number;
+};
+
+export type FoodLogDaySummaryRetrieveParams = {
+  date?: string;
+  profile: number;
+};
 
 /**
  * Unspecified response body

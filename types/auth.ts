@@ -5,4 +5,5 @@ export interface IAuthenticationContext {
     setAuthTab: (authTab: AuthTabs) => void
     handleOpenAuth: (authTab: AuthTabs) => void
     isAuthenticated: boolean
+    setIsAuthenticated: (value: boolean) => void
 }

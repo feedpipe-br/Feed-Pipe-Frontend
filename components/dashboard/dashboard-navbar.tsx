@@ -29,10 +29,7 @@ function getInitial(name: string): string {
 }
 
 export function DashboardNavbar() {
-    const {currentProfileId, setCurrentProfileId, profiles, isPending} = useContext(ProfileContext) as IProfileContext
-    const currentProfile = useMemo(() => {
-        return currentProfileId && profiles ? profiles.find(p => p.id === currentProfileId) : null
-    }, [currentProfileId, profiles])
+    const {currentProfileId, setCurrentProfileId, profiles, isPending, currentProfile} = useContext(ProfileContext) as IProfileContext
 
     return (
         <Navbar maxWidth="xl" className="border-b border-border bg-card">

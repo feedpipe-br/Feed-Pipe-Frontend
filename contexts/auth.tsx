@@ -20,7 +20,7 @@ export function AuthenticationProvider({children}: { children: React.ReactNode }
         setIsAuthOpen(true)
     }
     return (
-        <AuthenticationContext.Provider value={{authTab, setAuthTab, handleOpenAuth, isAuthenticated}}>
+        <AuthenticationContext.Provider value={{authTab, setAuthTab, handleOpenAuth, isAuthenticated, setIsAuthenticated}}>
             {children}
             <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} defaultTab={authTab}/>
         </AuthenticationContext.Provider>

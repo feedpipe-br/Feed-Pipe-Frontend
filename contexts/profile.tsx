@@ -1,5 +1,5 @@
 import {Profile} from "@/src/api/endpoints/feedPipeAPI.schemas";
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useMemo} from "react";
 import {useRouter} from "next/navigation";
 import {AuthenticationContext} from "@/contexts/auth";
 import {IAuthenticationContext} from "@/types/auth";
@@ -9,6 +9,7 @@ import {usePersistentState} from "@/hooks/use-persistent-state";
 export interface IProfileContext {
     profiles: Profile[] | undefined
     currentProfileId: number | null
+    currentProfile: Profile | null | undefined
     setCurrentProfileId: (profileId: number) => void
     isPending: boolean
 }
@@ -30,8 +31,11 @@ export const ProfileProvider = ({ children }: Readonly<{ children: React.ReactNo
             setCurrentProfileId(firstProfileId);
         }
     }, [data])
+    const currentProfile = useMemo(() => {
+        return currentProfileId && data?.data ? data.data.find(p => p.id === currentProfileId) : null
+    }, [currentProfileId, data])
     return (
-        <ProfileContext.Provider value={{profiles: data?.data, currentProfileId, setCurrentProfileId, isPending}}>
+        <ProfileContext.Provider value={{profiles: data?.data, currentProfile, currentProfileId, setCurrentProfileId, isPending}}>
             {children}
         </ProfileContext.Provider>
     )

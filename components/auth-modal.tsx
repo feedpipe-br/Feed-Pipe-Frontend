@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, {useContext} from "react"
 import {useState} from "react"
 import {Eye, EyeOff, Leaf, Lock, Mail, MailCheck} from "lucide-react"
 import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/modal";
@@ -16,7 +16,8 @@ import {useRouter} from "next/navigation";
 import {AxiosError} from "axios";
 import {Login, Register} from "@/src/api/endpoints/feedPipeAPI.schemas";
 import {ApiErrors} from "@/types/api";
-import {AuthTabs} from "@/types/auth";
+import {AuthTabs, IAuthenticationContext} from "@/types/auth";
+import {AuthenticationContext} from "@/contexts/auth";
 
 interface AuthModalProps {
     isOpen: boolean
@@ -37,12 +38,14 @@ export function AuthModal({isOpen, onClose, defaultTab = "login"}: AuthModalProp
     const [activeTab, setActiveTab] = useState<AuthTabs>(defaultTab)
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
     const [errors, setErrors] = useState<FormErrors>({})
+    const { setIsAuthenticated } = useContext(AuthenticationContext) as IAuthenticationContext
     const router = useRouter();
     const login = useAuthLoginCreate({
         mutation: {
             onSuccess: ({data}) => {
                 Cookies.set('auth_token', data.key, {expires: 7});
                 onClose();
+                setIsAuthenticated(true);
                 router.push("/dashboard");
             },
             onError: (error: AxiosError) => {
