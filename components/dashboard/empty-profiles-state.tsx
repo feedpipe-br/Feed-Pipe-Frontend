@@ -44,7 +44,7 @@ export function EmptyProfileState() {
 
                         <Button
                             as={Link}
-                            href="/onboarding"
+                            href="/dashboard/profile/create"
                             className="bg-primary text-primary-foreground font-semibold mt-4"
                             radius="full"
                             size="lg"

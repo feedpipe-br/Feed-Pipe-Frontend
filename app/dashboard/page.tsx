@@ -9,11 +9,33 @@ import {MealsList} from "@/components/dashboard/meals-list"
 import {EmptyProfileState} from "@/components/dashboard/empty-profiles-state";
 import {IProfileContext, ProfileContext} from "@/contexts/profile";
 import {Spinner} from "@heroui/react";
+import {useFoodLogDaySummaryRetrieve} from "@/src/api/endpoints/food-log/food-log";
+import {AxiosError} from "axios";
 
 export default function DashboardPage() {
     const { profiles, isPending } = useContext(ProfileContext) as IProfileContext
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
     const [chartPeriod, setChartPeriod] = useState<7 | 15 | 30>(7)
+    const {currentProfile} = useContext(ProfileContext) as IProfileContext;
+    const daySummaryRetrieve = useFoodLogDaySummaryRetrieve(
+        {
+            profile: currentProfile?.id ?? -1,
+            date: selectedDate.toISOString().split("T")[0],
+        },
+        {
+            query: {
+                enabled: !!currentProfile,
+                retry: (failureCount, error) => {
+                    if (error instanceof AxiosError) {
+                        if (error.response?.status === 404){
+                            return false
+                        }
+                    }
+                    return true
+                }
+            }
+        }
+    );
 
     if (isPending){
         return (
@@ -31,23 +53,19 @@ export default function DashboardPage() {
                 <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
                 <p className="text-muted-foreground mt-1">Seguimiento de tu alimentación diaria</p>
             </div>
-
-            {/* Selector de fecha y resumen del día */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div className="lg:col-span-2">
-                    <DailyOverview selectedDate={selectedDate}/>
+                    <DailyOverview data={daySummaryRetrieve.data?.data} isLoading={daySummaryRetrieve.isLoading} selectedDate={selectedDate}/>
                 </div>
                 <div>
                     <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate}/>
                 </div>
             </div>
 
-            {/* Desglose de macronutrientes */}
             <div className="mb-8">
-                <MacrosBreakdown selectedDate={selectedDate}/>
+                <MacrosBreakdown data={daySummaryRetrieve.data?.data} isLoading={daySummaryRetrieve.isLoading}/>
             </div>
 
-            {/* Gráfica histórica */}
             <div className="mb-8">
                 <HistoricalChart period={chartPeriod} onPeriodChange={setChartPeriod}/>
             </div>

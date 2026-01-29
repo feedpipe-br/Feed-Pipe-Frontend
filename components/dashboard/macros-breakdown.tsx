@@ -1,50 +1,38 @@
 "use client"
 
-import {Card, CardBody, Progress, Spinner} from "@heroui/react"
-import {useContext} from "react"
-import {IProfileContext, ProfileContext} from "@/contexts/profile";
-import {useFoodLogDaySummaryRetrieve} from "@/src/api/endpoints/food-log/food-log";
+import {Card, CardBody, Progress} from "@heroui/react"
 import {Skeleton} from "@heroui/skeleton";
+import {DaySummary} from "@/src/api/endpoints/feedPipeAPI.schemas";
 
-export function MacrosBreakdown({selectedDate}: {selectedDate: Date}) {
-    const {currentProfile} = useContext(ProfileContext) as IProfileContext;
-    const {data , isLoading} = useFoodLogDaySummaryRetrieve(
-        {
-            profile: currentProfile?.id ?? -1,
-            date: selectedDate.toISOString().split("T")[0],
-        },
-        {
-            query: {
-                enabled: !!currentProfile
-            }
-        }
-    );
-
+export function MacrosBreakdown({data, isLoading}: {data: DaySummary | undefined, isLoading: boolean}) {
     if (isLoading){
         return <Skeleton className="bg-card p-6 rounded-lg h-56"/>
     }
 
+    if (!data)
+        return <></>
+
     const macros = [
         {
             name: "Proteínas",
-            consumed: data?.data.protein || 0,
-            goal: data?.data.daily_plan.protein || 0,
+            consumed: data.protein || 0,
+            goal: data.daily_plan.protein || 0,
             unit: "g",
             color: "bg-chart-1",
             progressColor: "success" as const,
         },
         {
             name: "Carbohidratos",
-            consumed: data?.data.carbs || 0,
-            goal: data?.data.daily_plan.carbs || 0,
+            consumed: data.carbs || 0,
+            goal: data.daily_plan.carbs || 0,
             unit: "g",
             color: "bg-chart-2",
             progressColor: "warning" as const,
         },
         {
             name: "Grasas",
-            consumed: data?.data.fats || 0,
-            goal: data?.data.daily_plan.fats || 0,
+            consumed: data.fats || 0,
+            goal: data.daily_plan.fats || 0,
             unit: "g",
             color: "bg-chart-4",
             progressColor: "secondary" as const,
