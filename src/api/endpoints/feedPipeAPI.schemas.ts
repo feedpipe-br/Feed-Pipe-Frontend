@@ -998,6 +998,14 @@ export type FoodLogDaySummaryRetrieveParams = {
   profile: number;
 };
 
+export type FoodLogDaySummaryRangeListParams = {
+  date?: string;
+  end?: string;
+  last_days?: number;
+  profile?: number;
+  start?: string;
+};
+
 /**
  * Unspecified response body
  */
