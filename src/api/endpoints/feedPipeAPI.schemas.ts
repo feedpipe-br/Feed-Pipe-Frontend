@@ -568,6 +568,14 @@ export interface DaySummary {
   protein: number;
   fats: number;
   carbs: number;
+  date?: string;
+}
+
+export interface DietRecommendations {
+  calories: number;
+  protein: number;
+  fats: number;
+  carbs: number;
 }
 
 export interface Food {

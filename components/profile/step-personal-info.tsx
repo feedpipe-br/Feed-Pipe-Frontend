@@ -1,19 +1,14 @@
 "use client"
 
 import {Autocomplete, AutocompleteItem, Button, Input} from "@heroui/react"
-import {ProfileCreateMutationBody} from "@/src/api/endpoints/profile/profile";
 import {CountryEnum, GenderEnum} from "@/src/api/endpoints/feedPipeAPI.schemas";
 import {useMemo} from "react";
 import {countries} from "countries-list";
+import {StepProfileFormProps} from "@/types/profile-forms";
+import {ProfilePartialUpdateMutationBody} from "@/src/api/endpoints/profile/profile";
 
-interface StepPersonalInfoProps {
-    data: ProfileCreateMutationBody
-    onUpdate: (data: Partial<ProfileCreateMutationBody>) => void
-    onNext: () => void
-}
-
-export function StepPersonalInfo({data, onUpdate, onNext}: StepPersonalInfoProps) {
-    const isValid = data.name.trim() !== "" && data.birth_date !== ""
+export function StepPersonalInfo<T extends ProfilePartialUpdateMutationBody>({data, onUpdate, onNext}: StepProfileFormProps<T>) {
+    const isValid = (data.name && data.name.trim() !== "") && (data.birth_date && data.birth_date !== "")
     const today = new Date()
     const maxDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate()).toISOString().split("T")[0]
     const countryList = useMemo(() => {
@@ -86,11 +81,13 @@ export function StepPersonalInfo({data, onUpdate, onNext}: StepPersonalInfoProps
                 </div>
             </div>
 
-            <div className="flex justify-end mt-4">
-                <Button color="success" size="lg" onPress={onNext} isDisabled={!isValid} className="font-semibold">
-                    Continuar
-                </Button>
-            </div>
+            {onNext && (
+                <div className="flex justify-end mt-4">
+                    <Button color="success" size="lg" onPress={onNext} isDisabled={!isValid} className="font-semibold">
+                        Continuar
+                    </Button>
+                </div>
+            )}
         </div>
     )
 }

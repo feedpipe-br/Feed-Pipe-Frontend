@@ -1,21 +1,21 @@
 "use client"
 
 import {
+    Avatar,
+    Button,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownSection,
+    DropdownTrigger,
     Navbar,
     NavbarBrand,
     NavbarContent,
     NavbarItem,
-    Avatar,
-    Dropdown,
-    DropdownTrigger,
-    DropdownMenu,
-    DropdownItem,
-    DropdownSection,
-    Button,
 } from "@heroui/react"
-import {Leaf, LogOut, Settings, UserPlus, Pencil, ChevronDown, Plus} from "lucide-react"
+import {ChevronDown, Leaf, LogOut, Pencil, Plus, Settings, UserPlus} from "lucide-react"
 import Link from "next/link"
-import {useContext, useMemo} from "react";
+import {useContext} from "react";
 import {IProfileContext, ProfileContext} from "@/contexts/profile";
 
 const goalLabels = {
@@ -104,7 +104,7 @@ export function DashboardNavbar() {
                                     <DropdownItem
                                         key="new-profile"
                                         as={Link}
-                                        href="/onboarding"
+                                        href="/dashboard/profile/create"
                                         startContent={<Plus className="h-4 w-4"/>}
                                         className="text-primary"
                                     >
@@ -158,7 +158,7 @@ export function DashboardNavbar() {
                                     <DropdownItem
                                         key="edit-profile"
                                         as={Link}
-                                        href={`/profile/${currentProfile.id}/edit`}
+                                        href={'dashboard/profile/edit'}
                                         startContent={<Pencil className="h-4 w-4"/>}
                                         description="Nombre, peso, objetivo..."
                                     >

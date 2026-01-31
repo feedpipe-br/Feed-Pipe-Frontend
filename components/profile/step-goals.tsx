@@ -1,69 +1,13 @@
 "use client"
 
-import {Button, RadioGroup, Radio, cn} from "@heroui/react"
-import {TrendingDown, Minus, TrendingUp, Turtle, Gauge, Zap} from "lucide-react"
-import {ProfileCreateMutationBody} from "@/src/api/endpoints/profile/profile";
-import {GoalEnum, GoalIntensityEnum} from "@/src/api/endpoints/feedPipeAPI.schemas";
+import {Button, cn, Radio, RadioGroup} from "@heroui/react"
+import {goalOptions, intensityOptions} from "@/constants";
+import {StepProfileFormProps} from "@/types/profile-forms";
+import {GoalIntensityEnum, Profile} from "@/src/api/endpoints/feedPipeAPI.schemas";
+import {ProfilePartialUpdateMutationBody} from "@/src/api/endpoints/profile/profile";
 
-interface StepGoalsProps {
-    data: ProfileCreateMutationBody
-    onUpdate: (data: Partial<ProfileCreateMutationBody>) => void
-    onNext: () => void
-    onBack: () => void
-}
 
-const goalOptions = [
-    {
-        value: GoalEnum.weight_loss,
-        label: "Perder Peso",
-        description: "Reducir grasa corporal",
-        icon: TrendingDown,
-        color: "text-blue-500",
-    },
-    {
-        value: GoalEnum.maintenance,
-        label: "Mantener Peso",
-        description: "Conservar mi peso actual",
-        icon: Minus,
-        color: "text-emerald-500",
-    },
-    {
-        value: GoalEnum.weight_gain,
-        label: "Ganar Peso",
-        description: "Aumentar masa muscular",
-        icon: TrendingUp,
-        color: "text-orange-500",
-    },
-]
-
-const intensityOptions = [
-    {
-        value: GoalIntensityEnum.conservative,
-        label: "Conservador",
-        description: "Cambios graduales y sostenibles",
-        detail: "~0.25kg/semana",
-        icon: Turtle,
-        color: "text-emerald-500",
-    },
-    {
-        value: GoalIntensityEnum.moderate,
-        label: "Moderado",
-        description: "Balance entre velocidad y sostenibilidad",
-        detail: "~0.5kg/semana",
-        icon: Gauge,
-        color: "text-amber-500",
-    },
-    {
-        value: GoalIntensityEnum.aggressive,
-        label: "Agresivo",
-        description: "Resultados más rápidos, mayor esfuerzo",
-        detail: "~0.75kg/semana",
-        icon: Zap,
-        color: "text-red-500",
-    },
-]
-
-export function StepGoals({data, onUpdate, onNext, onBack}: StepGoalsProps) {
+export function StepGoals<T extends ProfilePartialUpdateMutationBody>({data, onUpdate, onNext, onBack}: StepProfileFormProps<T>) {
     const showIntensity = data.goal === "weight_loss" || data.goal === "weight_gain"
     const isValid = !showIntensity || data.goal_intensity !== ""
 
@@ -73,7 +17,7 @@ export function StepGoals({data, onUpdate, onNext, onBack}: StepGoalsProps) {
                 <span className="text-sm font-medium">Cual es tu objetivo?</span>
                 <RadioGroup
                     value={data.goal}
-                    onValueChange={(value) => onUpdate({goal: value as ProfileCreateMutationBody["goal"]})}
+                    onValueChange={(value) => onUpdate({goal: value as Profile["goal"]})}
                     className="gap-3"
                 >
                     {goalOptions.map((option) => {
@@ -111,7 +55,7 @@ export function StepGoals({data, onUpdate, onNext, onBack}: StepGoalsProps) {
                     <span className="text-sm font-medium">Nivel de intensidad</span>
                     <RadioGroup
                         value={data.goal_intensity}
-                        onValueChange={(value) => onUpdate({goal_intensity: value as ProfileCreateMutationBody["goal_intensity"]})}
+                        onValueChange={(value) => onUpdate({goal_intensity: value as GoalIntensityEnum})}
                         className="gap-3"
                     >
                         {intensityOptions.map((option) => {
@@ -146,14 +90,16 @@ export function StepGoals({data, onUpdate, onNext, onBack}: StepGoalsProps) {
                 </div>
             )}
 
-            <div className="flex justify-between mt-4">
-                <Button variant="bordered" size="lg" onPress={onBack}>
-                    Atrás
-                </Button>
-                <Button color="success" size="lg" onPress={onNext} isDisabled={!isValid} className="font-semibold">
-                    Ver Recomendaciones
-                </Button>
-            </div>
+            {onNext && onBack && (
+                <div className="flex justify-between mt-4">
+                    <Button variant="bordered" size="lg" onPress={onBack}>
+                        Atrás
+                    </Button>
+                    <Button color="success" size="lg" onPress={onNext} isDisabled={!isValid} className="font-semibold">
+                        Ver Recomendaciones
+                    </Button>
+                </div>
+            )}
         </div>
     )
 }

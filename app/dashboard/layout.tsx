@@ -3,6 +3,7 @@
 import React from "react";
 import {DashboardNavbar} from "@/components/dashboard/dashboard-navbar";
 import {ProfileProvider} from "@/contexts/profile";
+import BackButton from "@/components/dashboard/back-button";
 
 
 export default function DashboardLayout({children}: Readonly<{ children: React.ReactNode }>) {
@@ -10,6 +11,7 @@ export default function DashboardLayout({children}: Readonly<{ children: React.R
         <ProfileProvider>
             <div className="min-h-screen bg-background">
                 <DashboardNavbar/>
+                <BackButton/>
                 {children}
             </div>
         </ProfileProvider>

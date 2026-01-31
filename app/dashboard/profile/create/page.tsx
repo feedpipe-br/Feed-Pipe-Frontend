@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react"
+import {useContext, useState} from "react"
 import {Card, CardBody, CardHeader} from "@heroui/card";
 import {Progress} from "@heroui/progress";
 import {StepPersonalInfo} from "@/components/profile/step-personal-info"
@@ -11,40 +11,37 @@ import {
     ProfileCreateMutationBody,
     ProfileUpdateDailyPlanPartialUpdateMutationBody,
     useProfileCreate,
+    useProfileGetDailyPlanRecommendationsRetrieve,
     useProfilePartialUpdate,
     useProfileUpdateDailyPlanPartialUpdate,
 } from "@/src/api/endpoints/profile/profile";
 import {Profile} from "@/src/api/endpoints/feedPipeAPI.schemas";
 import {addToast} from "@heroui/react";
 import {useRouter} from "next/navigation";
+import {IProfileContext, ProfileContext} from "@/contexts/profile";
+import {initialProfileData} from "@/constants";
 
-const initialProfileData: ProfileCreateMutationBody = {
-    name: "",
-    birth_date: "",
-    gender: "male",
-    country: "",
-    height: 170,
-    weight_value: 70,
-    weight_unit: "kg",
-    activity_degree: 5,
-    goal: "maintenance",
-    goal_intensity: "moderate",
-}
 
 const stepTitles = ["Información Personal", "Métricas Corporales", "Objetivos", "Recomendaciones"]
 
 export default function CreateProfilePage() {
+    const {refetchProfiles, setCurrentProfileId} = useContext(ProfileContext) as IProfileContext;
     const [currentStep, setCurrentStep] = useState(1)
     const [profileData, setProfileData] = useState<ProfileCreateMutationBody>(initialProfileData)
     const [profileComplete, setProfileComplete] = useState<Profile | null>(null)
-    const [initialDailyPlan, setInitialDailyPlan] = useState<ProfileUpdateDailyPlanPartialUpdateMutationBody>({})
+    const initialDailyPlan = useProfileGetDailyPlanRecommendationsRetrieve(profileComplete?.id.toString() || "-1", {
+        query: {
+            enabled: !!profileComplete
+        }
+    })
     const router = useRouter();
     const createProfile = useProfileCreate({
         mutation: {
             onSuccess: ({data}) => {
                 setProfileComplete(data);
             },
-            onError: () => {
+            onError: (error) => {
+                console.error(error);
                 addToast({
                     description: "Fallo crear el perfil, verifique que los datos estan correctos.",
                     color: "danger"
@@ -72,6 +69,8 @@ export default function CreateProfilePage() {
                     description: `Se completo la creacion del perfil ${profileComplete?.name}.`,
                     color: "success",
                 })
+                refetchProfiles();
+                profileComplete && setCurrentProfileId((profileComplete.id))
                 router.push("/dashboard")
             },
             onError: () => {
@@ -115,7 +114,7 @@ export default function CreateProfilePage() {
     }
 
     return (
-        <main className="flex justify-center items-center lg:pt-[70px] pt-3 px-3 lg:pt-0">
+        <main className="flex justify-center items-center lg:pt-[70px] pt-3 px-3">
             <Card className="w-full max-w-2xl py-3 px-3">
                 <CardHeader className="flex flex-col gap-4 pb-0">
                     <div className="flex items-center justify-between w-full">
@@ -145,8 +144,8 @@ export default function CreateProfilePage() {
                         <StepGoals data={profileData} onUpdate={updateProfileData} onNext={handleNext}
                                    onBack={handleBack}/>
                     )}
-                    {currentStep === 4 && initialDailyPlan && (
-                        <StepDailyPlan initialDailyPlan={initialDailyPlan} onBack={handleBack}
+                    {currentStep === 4 && initialDailyPlan.data?.data && (
+                        <StepDailyPlan initialDailyPlan={initialDailyPlan.data.data} onBack={handleBack}
                                        onComplete={handleCompleteDailyPlan}/>
                     )}
                 </CardBody>

@@ -23,6 +23,7 @@ import type {
 
 import type {
   DailyPlan,
+  DietRecommendations,
   PatchedDailyPlan,
   PatchedProfile,
   Profile,
@@ -736,6 +737,211 @@ export const useProfileDestroy = <TError = unknown, TContext = unknown>(
 > => {
   return useMutation(getProfileDestroyMutationOptions(options), queryClient);
 };
+/**
+ * Get recommendations for the daily plan.
+ */
+export type profileGetDailyPlanRecommendationsRetrieveResponse200 = {
+  data: DietRecommendations;
+  status: 200;
+};
+
+export type profileGetDailyPlanRecommendationsRetrieveResponseSuccess =
+  profileGetDailyPlanRecommendationsRetrieveResponse200 & {
+    headers: Headers;
+  };
+export type profileGetDailyPlanRecommendationsRetrieveResponse =
+  profileGetDailyPlanRecommendationsRetrieveResponseSuccess;
+
+export const getProfileGetDailyPlanRecommendationsRetrieveUrl = (
+  id: string,
+) => {
+  return `/api/profile/${id}/get_daily_plan_recommendations/`;
+};
+
+export const profileGetDailyPlanRecommendationsRetrieve = async (
+  id: string,
+  options?: RequestInit,
+): Promise<profileGetDailyPlanRecommendationsRetrieveResponse> => {
+  return axiosInstance<profileGetDailyPlanRecommendationsRetrieveResponse>(
+    getProfileGetDailyPlanRecommendationsRetrieveUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getProfileGetDailyPlanRecommendationsRetrieveQueryKey = (
+  id?: string,
+) => {
+  return [`/api/profile/${id}/get_daily_plan_recommendations/`] as const;
+};
+
+export const getProfileGetDailyPlanRecommendationsRetrieveQueryOptions = <
+  TData = Awaited<
+    ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>
+  >,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getProfileGetDailyPlanRecommendationsRetrieveQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>
+  > = ({ signal }) =>
+    profileGetDailyPlanRecommendationsRetrieve(id, {
+      signal,
+      ...requestOptions,
+    });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ProfileGetDailyPlanRecommendationsRetrieveQueryResult = NonNullable<
+  Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>
+>;
+export type ProfileGetDailyPlanRecommendationsRetrieveQueryError = unknown;
+
+export function useProfileGetDailyPlanRecommendationsRetrieve<
+  TData = Awaited<
+    ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>
+  >,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<
+            ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>
+          >,
+          TError,
+          Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useProfileGetDailyPlanRecommendationsRetrieve<
+  TData = Awaited<
+    ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>
+  >,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<
+            ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>
+          >,
+          TError,
+          Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useProfileGetDailyPlanRecommendationsRetrieve<
+  TData = Awaited<
+    ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>
+  >,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useProfileGetDailyPlanRecommendationsRetrieve<
+  TData = Awaited<
+    ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>
+  >,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof profileGetDailyPlanRecommendationsRetrieve>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getProfileGetDailyPlanRecommendationsRetrieveQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
 /**
  * Update or create the daily plan associated with the profile.
  */

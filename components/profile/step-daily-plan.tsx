@@ -1,58 +1,26 @@
 "use client"
 
 import {useState} from "react"
-import {Button, Input, Card, CardBody} from "@heroui/react"
-import {Flame, Beef, Wheat, Droplets, Info} from "lucide-react"
+import {Button, Card, CardBody, Input} from "@heroui/react"
+import {Info} from "lucide-react"
 import {ProfileUpdateDailyPlanPartialUpdateMutationBody} from "@/src/api/endpoints/profile/profile";
+import {macroItems} from "@/constants";
+import {StepDailyPlanFormProps} from "@/types/profile-forms";
+import {DietRecommendations} from "@/src/api/endpoints/feedPipeAPI.schemas";
 
-interface StepDailyPlanProps {
-    initialDailyPlan: ProfileUpdateDailyPlanPartialUpdateMutationBody
-    onBack: () => void
-    onComplete: (dailyPlan: ProfileUpdateDailyPlanPartialUpdateMutationBody) => void
-}
 
-export function StepDailyPlan({initialDailyPlan, onBack, onComplete}: StepDailyPlanProps) {
+export function StepDailyPlan<T extends DietRecommendations>({
+                                                                 initialDailyPlan,
+                                                                 onBack,
+                                                                 onComplete,
+                                                                 btnText
+                                                             }: StepDailyPlanFormProps<T>) {
     const [customValues, setCustomValues] = useState<ProfileUpdateDailyPlanPartialUpdateMutationBody>(initialDailyPlan)
     const [isEditing, setIsEditing] = useState(false)
 
     const handleReset = () => {
         setCustomValues(initialDailyPlan)
     }
-
-    const macroItems = [
-        {
-            key: "total_cal",
-            label: "Calorías Diarias",
-            icon: Flame,
-            color: "bg-orange-100 text-orange-600",
-            unit: "kcal",
-            description: "Tu gasto energético total ajustado a tu objetivo",
-        },
-        {
-            key: "proteins",
-            label: "Proteínas",
-            icon: Beef,
-            color: "bg-red-100 text-red-600",
-            unit: "g",
-            description: "Esencial para mantener y construir masa muscular",
-        },
-        {
-            key: "carbs",
-            label: "Carbohidratos",
-            icon: Wheat,
-            color: "bg-amber-100 text-amber-600",
-            unit: "g",
-            description: "Tu principal fuente de energía",
-        },
-        {
-            key: "fats",
-            label: "Grasas",
-            icon: Droplets,
-            color: "bg-blue-100 text-blue-600",
-            unit: "g",
-            description: "Importantes para hormonas y absorción de vitaminas",
-        },
-    ]
 
     return (
         <div className="flex flex-col gap-6">
@@ -72,7 +40,7 @@ export function StepDailyPlan({initialDailyPlan, onBack, onComplete}: StepDailyP
                 {macroItems.map((item) => {
                     const Icon = item.icon
                     const value = customValues[item.key as keyof ProfileUpdateDailyPlanPartialUpdateMutationBody]
-                    const originalValue = initialDailyPlan[item.key as keyof ProfileUpdateDailyPlanPartialUpdateMutationBody]
+                    const originalValue = initialDailyPlan[item.key as keyof DietRecommendations]
                     const hasChanged = value !== originalValue
 
                     return (
@@ -96,7 +64,7 @@ export function StepDailyPlan({initialDailyPlan, onBack, onComplete}: StepDailyP
                                         {isEditing ? (
                                             <Input
                                                 type="number"
-                                                value={value ? value.toString(): ""}
+                                                value={value ? value.toString() : ""}
                                                 onValueChange={(val) =>
                                                     setCustomValues((prev) => ({
                                                         ...prev,
@@ -138,14 +106,16 @@ export function StepDailyPlan({initialDailyPlan, onBack, onComplete}: StepDailyP
                     </Button>
                 )}
             </div>
-
             <div className="flex justify-between mt-4">
-                <Button variant="bordered" size="lg" onPress={onBack}>
-                    Atrás
-                </Button>
-                <Button color="success" size="lg" onPress={() => onComplete(customValues)} className="font-semibold">
-                    Completar Perfil
-                </Button>
+                {onBack && (
+                    <Button variant="bordered" size="lg" onPress={onBack}>
+                        Atrás
+                    </Button>)}
+                {onComplete && (
+                    <Button color="success" size="lg" onPress={() => onComplete(customValues)}
+                            className="font-semibold">
+                        {btnText || "Completar Perfil"}
+                    </Button>)}
             </div>
         </div>
     )

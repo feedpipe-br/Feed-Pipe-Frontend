@@ -12,6 +12,7 @@ export interface IProfileContext {
     currentProfile: Profile | null | undefined
     setCurrentProfileId: (profileId: number) => void
     isPending: boolean
+    refetchProfiles: () => void
 }
 export const ProfileContext = React.createContext<IProfileContext | null>(null)
 
@@ -19,7 +20,7 @@ export const ProfileContext = React.createContext<IProfileContext | null>(null)
 export const ProfileProvider = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     const {isAuthenticated, handleOpenAuth} = useContext(AuthenticationContext) as IAuthenticationContext;
     const router = useRouter();
-    const {data, isPending} = useProfileList();
+    const {data, isPending, refetch: refetchProfiles} = useProfileList();
     const [currentProfileId, setCurrentProfileId] = usePersistentState<number| null>("currentProfileId", null);
 
     useEffect(() => {
@@ -41,7 +42,7 @@ export const ProfileProvider = ({ children }: Readonly<{ children: React.ReactNo
     }, [currentProfileId, data])
 
     return (
-        <ProfileContext.Provider value={{profiles: data?.data, currentProfile, currentProfileId, setCurrentProfileId, isPending}}>
+        <ProfileContext.Provider value={{profiles: data?.data, currentProfile, currentProfileId, setCurrentProfileId, isPending, refetchProfiles}}>
             {children}
         </ProfileContext.Provider>
     )
