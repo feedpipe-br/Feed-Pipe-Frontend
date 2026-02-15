@@ -2,7 +2,6 @@
 
 import {useContext, useState} from "react"
 import {DailyOverview} from "@/components/dashboard/daily-overview"
-import {MacrosBreakdown} from "@/components/dashboard/macros-breakdown"
 import {HistoricalChart} from "@/components/dashboard/historical-chart"
 import {DateSelector} from "@/components/dashboard/date-selector"
 import {MealsList} from "@/components/dashboard/meals-list"
@@ -60,10 +59,6 @@ export default function DashboardPage() {
                 <div>
                     <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate}/>
                 </div>
-            </div>
-
-            <div className="mb-8">
-                <MacrosBreakdown data={daySummaryRetrieve.data?.data} isLoading={daySummaryRetrieve.isLoading}/>
             </div>
 
             <div className="mb-8">
