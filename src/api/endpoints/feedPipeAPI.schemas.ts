@@ -540,22 +540,22 @@ export interface DailyPlan {
   readonly id: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   calories: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   protein: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   fats: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   carbs: number;
   start_date?: string;
@@ -595,7 +595,7 @@ export interface Food {
   ingredients?: unknown;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   serving?: number;
   /**
@@ -726,6 +726,15 @@ export type NullEnum = (typeof NullEnum)[keyof typeof NullEnum];
 
 export const NullEnum = {} as const;
 
+export interface PaginatedFoodList {
+  count: number;
+  /** @nullable */
+  next?: string | null;
+  /** @nullable */
+  previous?: string | null;
+  results: Food[];
+}
+
 export interface PasswordChange {
   /** @maxLength 128 */
   new_password1: string;
@@ -756,22 +765,22 @@ export interface PatchedDailyPlan {
   readonly id?: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   calories?: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   protein?: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   fats?: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   carbs?: number;
   start_date?: string;
@@ -795,7 +804,7 @@ export interface PatchedFood {
   ingredients?: unknown;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   serving?: number;
   /**
@@ -876,17 +885,18 @@ export const WeightUnitEnum = {
 export interface PatchedProfile {
   readonly id?: number;
   readonly daily_plan?: DailyPlan;
+  country?: CountryEnum | BlankEnum;
   /** @maxLength 250 */
   name?: string;
   birth_date?: string;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   height?: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   weight_value?: number;
   weight_unit?: WeightUnitEnum;
@@ -898,7 +908,6 @@ export interface PatchedProfile {
   goal?: GoalEnum;
   goal_intensity?: GoalIntensityEnum | BlankEnum | NullEnum;
   gender?: GenderEnum;
-  country?: CountryEnum | BlankEnum | NullEnum;
 }
 
 /**
@@ -922,17 +931,18 @@ export interface PatchedUserDetails {
 export interface Profile {
   readonly id: number;
   readonly daily_plan: DailyPlan;
+  country?: CountryEnum | BlankEnum;
   /** @maxLength 250 */
   name: string;
   birth_date: string;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   height: number;
   /**
    * @minimum 0
-   * @maximum 9223372036854776000
+   * @maximum 2147483647
    */
   weight_value: number;
   weight_unit?: WeightUnitEnum;
@@ -944,7 +954,6 @@ export interface Profile {
   goal?: GoalEnum;
   goal_intensity?: GoalIntensityEnum | BlankEnum | NullEnum;
   gender: GenderEnum;
-  country?: CountryEnum | BlankEnum | NullEnum;
 }
 
 export interface Register {
@@ -995,6 +1004,14 @@ export interface UserDetails {
 export interface VerifyEmail {
   key: string;
 }
+
+export type FoodListParams = {
+  /**
+   * A page number within the paginated result set.
+   */
+  page?: number;
+  search?: string;
+};
 
 export type FoodLogListParams = {
   date?: string;

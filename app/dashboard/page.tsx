@@ -71,7 +71,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Lista de comidas del día */}
-            <MealsList selectedDate={selectedDate}/>
+            <MealsList selectedDate={selectedDate} refecthDaySummary={daySummaryRetrieve.refetch}/>
         </main>
     )
     return (

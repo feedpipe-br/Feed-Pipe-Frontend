@@ -21,7 +21,12 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { Food, PatchedFood } from "../feedPipeAPI.schemas";
+import type {
+  Food,
+  FoodListParams,
+  PaginatedFoodList,
+  PatchedFood,
+} from "../feedPipeAPI.schemas";
 
 import { axiosInstance } from "../../../../axios/axios";
 
@@ -56,7 +61,7 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type foodListResponse200 = {
-  data: Food[];
+  data: PaginatedFoodList;
   status: 200;
 };
 
@@ -65,39 +70,55 @@ export type foodListResponseSuccess = foodListResponse200 & {
 };
 export type foodListResponse = foodListResponseSuccess;
 
-export const getFoodListUrl = () => {
-  return `/api/food/`;
+export const getFoodListUrl = (params?: FoodListParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/food/?${stringifiedParams}`
+    : `/api/food/`;
 };
 
 export const foodList = async (
+  params?: FoodListParams,
   options?: RequestInit,
 ): Promise<foodListResponse> => {
-  return axiosInstance<foodListResponse>(getFoodListUrl(), {
+  return axiosInstance<foodListResponse>(getFoodListUrl(params), {
     ...options,
     method: "GET",
   });
 };
 
-export const getFoodListQueryKey = () => {
-  return [`/api/food/`] as const;
+export const getFoodListQueryKey = (params?: FoodListParams) => {
+  return [`/api/food/`, ...(params ? [params] : [])] as const;
 };
 
 export const getFoodListQueryOptions = <
   TData = Awaited<ReturnType<typeof foodList>>,
   TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
-  >;
-  request?: SecondParameter<typeof axiosInstance>;
-}) => {
+>(
+  params?: FoodListParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof axiosInstance>;
+  },
+) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getFoodListQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getFoodListQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof foodList>>> = ({
     signal,
-  }) => foodList({ signal, ...requestOptions });
+  }) => foodList(params, { signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof foodList>>,
@@ -115,6 +136,7 @@ export function useFoodList<
   TData = Awaited<ReturnType<typeof foodList>>,
   TError = unknown,
 >(
+  params: undefined | FoodListParams,
   options: {
     query: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
@@ -137,6 +159,7 @@ export function useFoodList<
   TData = Awaited<ReturnType<typeof foodList>>,
   TError = unknown,
 >(
+  params?: FoodListParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
@@ -159,6 +182,7 @@ export function useFoodList<
   TData = Awaited<ReturnType<typeof foodList>>,
   TError = unknown,
 >(
+  params?: FoodListParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
@@ -174,6 +198,7 @@ export function useFoodList<
   TData = Awaited<ReturnType<typeof foodList>>,
   TError = unknown,
 >(
+  params?: FoodListParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof foodList>>, TError, TData>
@@ -184,7 +209,7 @@ export function useFoodList<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getFoodListQueryOptions(options);
+  const queryOptions = getFoodListQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
